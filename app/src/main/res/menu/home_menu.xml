@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/m_groups"
+            android:title="Your Groups"
+            android:icon="@drawable/ic_group"/>
+
+        <item
+            android:id="@+id/m_about"
+            android:title="About"
+            android:icon="@drawable/ic_whatshot"/>
+        <item
+            android:id="@+id/m_contact"
+            android:title="Contact Us"
+            android:icon="@drawable/ic_mail"/>
+        <item
+            android:id="@+id/m_exit"
+            android:title="Logout"
+            android:icon="@drawable/logout"/>
+
+    </group>
+</menu>

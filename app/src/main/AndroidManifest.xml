@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.yarinov.thefix">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <application
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MeetingSumActivity" android:theme="@style/MeetingSumTheme"/>
+        <activity android:name=".SetupMeetingActivity" android:theme="@style/CreateGroupTheme"/>
+        <activity android:name=".ChooseFriendActivity" />
+        <activity
+            android:name=".HomeMenuActivity"
+            android:label="@string/title_activity_home_menu"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CreateGroupActivity"
+            android:theme="@style/CreateGroupTheme" />
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".TechActivity"
+            android:label="@string/title_activity_tech" />
+        <activity android:name=".CategoriesActivity" />
+        <activity
+            android:name=".HomeActivity"
+            android:theme="@style/HomeTheme" />
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/LoginTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+    </application>
+
+</manifest>

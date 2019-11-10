@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/create_group_bg"
+    android:orientation="vertical"
+    tools:context=".CreateGroupActivity">
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20sp"
+        android:fontFamily="@font/pt_sans"
+        android:gravity="center"
+        android:text="Create New Group"
+        android:textColor="@color/colorAccent"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25sp"
+        android:layout_marginTop="25sp"
+        android:layout_marginRight="25sp"
+        android:ems="10"
+        android:fontFamily="@font/pt_sans"
+        android:gravity="center"
+        android:hint="Group Name"
+        android:inputType="textPersonName"
+        android:paddingLeft="16sp"
+        android:paddingRight="16sp"
+        android:textColor="@color/colorAccent"
+        android:textColorHint="@color/Gray"
+        android:textSize="24sp"
+        android:backgroundTint="@color/colorAccent"/>
+
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25sp"
+        android:layout_marginTop="25sp"
+        android:layout_marginRight="25sp"
+        android:ems="10"
+        android:fontFamily="@font/pt_sans"
+        android:gravity="center"
+        android:hint="Group Desc"
+        android:inputType="textPersonName"
+        android:paddingLeft="16sp"
+        android:paddingRight="16sp"
+        android:textColor="@color/colorAccent"
+        android:textColorHint="@color/Gray"
+        android:textSize="24sp"
+        android:backgroundTint="@color/colorAccent"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="15sp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12sp"
+            android:layout_marginTop="10sp"
+            android:text="Group Members"
+            android:textColor="@color/colorAccent"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/addFriendsIcon"
+            android:layout_width="66dp"
+            android:layout_height="50sp"
+            android:layout_marginLeft="8sp"
+            android:onClick="addFriendsSectionOpen"
+            app:srcCompat="@drawable/add_friend" />
+    </LinearLayout>
+
+</LinearLayout>

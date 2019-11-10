@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "706027305084",
+    "firebase_url": "https://lma-master.firebaseio.com",
+    "project_id": "lma-master",
+    "storage_bucket": "lma-master.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:706027305084:android:b0b5b93767ce2982bab1f9",
+        "android_client_info": {
+          "package_name": "com.yarinov.thefix"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "706027305084-kpg0chva2h0o2g5o2jmetcfptg2ehbt7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yarinov.thefix",
+            "certificate_hash": "9a8ce317a2107e0e01a7ddbca3bd8fb2c730c71f"
+          }
+        },
+        {
+          "client_id": "706027305084-rvndklatuho79f4hn1n5ur7dr7qa2kq3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDF0UaojOgA_kXDHWYESrCOGnCN_mOeDXo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "706027305084-rvndklatuho79f4hn1n5ur7dr7qa2kq3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
