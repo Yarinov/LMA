@@ -127,7 +127,7 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this, object : OnCompleteListener<AuthResult> {
                 override fun onComplete(task: Task<AuthResult>) {
                     if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
+                        //Sign in success, update UI with the signed-in user's information
                         Toast.makeText(this@LoginActivity, "Good", Toast.LENGTH_SHORT).show()
                         val user = mAuth!!.getCurrentUser()
 
