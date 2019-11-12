@@ -31,7 +31,7 @@ class HomeActivity : AppCompatActivity() {
 
         popupMenu.setMenuListener(object : SimpleMenuListenerAdapter() {
             override fun onPrepareMenu(navigationMenu: NavigationMenu?): Boolean {
-                titleLayout!!.visibility = View.VISIBLE
+
                 return true
             }
 

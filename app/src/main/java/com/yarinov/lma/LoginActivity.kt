@@ -29,6 +29,8 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login2)
 
+        loginFlag = false
+
         var loginButton = findViewById<Button>(R.id.loginButton)
         var signupButton = findViewById<Button>(R.id.signupButton)
 
@@ -74,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun loginToApp(view: View) {
-        val intent = Intent(this, PhoneVerifyActivity::class.java)
+        val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
     }
 
@@ -84,7 +86,7 @@ class LoginActivity : AppCompatActivity() {
             super.recreate()
 
         } else
-            super.onBackPressed()
+            finish()
     }
 
     fun signupToFirebase(view: View) {
@@ -112,61 +114,19 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        //Progress dialog for the signup process
-        val progressDialog = ProgressDialog(
-            this@LoginActivity,
-            R.style.AppTheme
-        )
-        progressDialog.isIndeterminate = true
-        progressDialog.setMessage("Creating Account...")
-        progressDialog.show()
+        val newUserData = HashMap<String, String>()
+        newUserData.put("Name", userName.text.toString())
+        newUserData.put("Email", userEmail.text.toString())
+        newUserData.put("Password", userPassword.text.toString())
+        newUserData.put("Role", "normal")
+
+        val toVerifyPhoneIntent = Intent(this, PhoneVerifyActivity::class.java)
+        toVerifyPhoneIntent.putExtra("userData", newUserData)
+
+        startActivity(toVerifyPhoneIntent)
+
+        finish()
 
 
-
-        mAuth!!.createUserWithEmailAndPassword(
-            userEmail.text.toString(),
-            userPassword.text.toString()
-        )
-            .addOnCompleteListener(this, object : OnCompleteListener<AuthResult> {
-                override fun onComplete(task: Task<AuthResult>) {
-                    if (task.isSuccessful()) {
-                        //Sign in success, update UI with the signed-in user's information
-                        Toast.makeText(this@LoginActivity, "Good", Toast.LENGTH_SHORT).show()
-                        val user = mAuth!!.getCurrentUser()
-
-                        //Get a new user uid and create a new user in the database
-                        var user_id = user!!.getUid()
-                        val currentUserDb =
-                            FirebaseDatabase.getInstance().getReference().child("Users")
-                                .child(user_id)
-
-                        val newUserData = HashMap<String, String>()
-                        newUserData.put("Name", userName.text.toString())
-                        newUserData.put("Email", userEmail.text.toString())
-                        newUserData.put("Role", "normal")
-
-                        currentUserDb.setValue(newUserData)
-
-                        progressDialog.dismiss()
-                        //Go to home page after login the new user
-                        openHome()
-                        //updateUI(user)
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Toast.makeText(
-                            this@LoginActivity, "Authentication failed.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        // updateUI(null)
-                    }
-
-                    // ...
-                }
-            })
-    }
-
-    private fun openHome() {
-        val intent = Intent(this, HomeActivity::class.java)
-        startActivity(intent)
     }
 }

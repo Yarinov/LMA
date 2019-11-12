@@ -14,7 +14,14 @@ import com.chaos.view.PinView
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseException
-import com.google.firebase.auth.*
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.hbb20.CountryCodePicker
 import java.util.concurrent.TimeUnit
 
@@ -32,13 +39,11 @@ class PhoneVerifyActivity : AppCompatActivity() {
     var countryCodePicker: CountryCodePicker? = null
     var verifyCodeInput: PinView? = null
 
-    private var mVerificationInProgress = false
-    private var mVerificationId: String? = null
-    private var mResendToken: PhoneAuthProvider.ForceResendingToken? = null
-    // private var mCallbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks? = null
     private var verificationid: String? = null
 
     var phoneNumber: String? = null
+
+    var userData: HashMap<String, String>? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,11 +62,7 @@ class PhoneVerifyActivity : AppCompatActivity() {
 
         countryCodePicker?.setCountryPreference("IL")
 
-
-    }
-
-    override fun onStart() {
-        super.onStart()
+        userData = intent.extras!!.get("userData") as HashMap<String, String>?
     }
 
     private fun startPhoneNumberVerification(phoneNumber: String) {
@@ -98,15 +99,34 @@ class PhoneVerifyActivity : AppCompatActivity() {
         phoneNumber =
             "+" + countryCodePicker!!.selectedCountryCode + phoneNumberInput!!.text.toString()
 
-        if (!validatePhoneNumberAndCode()) return
+        var userRef = FirebaseDatabase.getInstance().getReference("Users")
+        userRef.orderByChild("Phone Number").equalTo(phoneNumber)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
 
-        startPhoneNumberVerification(phoneNumber!!)
+                override fun onDataChange(p0: DataSnapshot) {
+                    if (p0.getValue() != null) {
+                        Toast.makeText(
+                            this@PhoneVerifyActivity,
+                            "There is already a member register with this phone number",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else {
+                        if (!validatePhoneNumberAndCode()) return
+
+                        startPhoneNumberVerification(phoneNumber!!)
 
 
-        firstVerifyLayout!!.visibility = View.GONE
-        secondVerifyLayout!!.visibility = View.VISIBLE
+                        firstVerifyLayout!!.visibility = View.GONE
+                        secondVerifyLayout!!.visibility = View.VISIBLE
 
-        verifyCodeText?.setText("Please type the verification code sent to " + phoneNumber)
+                        verifyCodeText?.setText("Please type the verification code sent to " + phoneNumber)
+                    }
+                }
+
+            })
 
     }
 
@@ -127,29 +147,49 @@ class PhoneVerifyActivity : AppCompatActivity() {
     private fun verifyPhoneNumberWithCode(verificationId: String, code: String) {
 
         val credential = PhoneAuthProvider.getCredential(verificationId, code)
-        signInWithPhoneAuthCredential(credential)
+
+
+        if (credential.smsCode.equals(verifyCodeInput?.text.toString())) {
+            signInWithPhoneAuthCredential(credential)
+        }
     }
 
 
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
-        mAuth?.signInWithCredential(credential)
-            ?.addOnCompleteListener(this, object : OnCompleteListener<AuthResult> {
+
+
+        mAuth!!.signInWithCredential(credential)
+            .addOnCompleteListener(this, object : OnCompleteListener<AuthResult> {
                 override fun onComplete(task: Task<AuthResult>) {
                     if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
+                        //Sign in success, update UI with the signed-in user's information
+                        Toast.makeText(this@PhoneVerifyActivity, "Good", Toast.LENGTH_SHORT).show()
+                        val user = mAuth!!.getCurrentUser()
 
-                        val user = task.getResult()?.getUser()
+                        //Get a new user uid and create a new user in the database
+                        var user_id = user!!.getUid()
+                        val currentUserDb =
+                            FirebaseDatabase.getInstance().getReference().child("Users")
+                                .child(user_id)
 
+                        userData!!.put("Phone Number", phoneNumber!!)
+
+                        currentUserDb.setValue(userData)
+
+                        //Go to home page after login the new user
                         startActivity(Intent(applicationContext, HomeActivity::class.java))
-
+                        finish()
+                        //updateUI(user)
                     } else {
-                        // Sign in failed, display a message and update the UI
-
-                        if (task.getException() is FirebaseAuthInvalidCredentialsException) {
-                            // The verification code entered was invalid
-                        }
-
+                        // If sign in fails, display a message to the user.
+                        Toast.makeText(
+                            this@PhoneVerifyActivity, "Authentication failed.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        // updateUI(null)
                     }
+
+                    // ...
                 }
             })
     }
