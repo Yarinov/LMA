@@ -10,7 +10,6 @@
         android:toXScale="1.0"
         android:fromYScale="0.0"
         android:toYScale="1.0"
-        android:fillAfter="false"
-        />
+        android:fillAfter="false" />
 
 </set>

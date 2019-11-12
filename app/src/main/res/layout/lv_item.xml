@@ -46,8 +46,7 @@
             android:layout_marginLeft="8sp"
             android:text="Name"
             android:textColor="@color/colorAccent"
-            android:textSize="25sp"
-            />
+            android:textSize="25sp" />
 
 
     </LinearLayout>

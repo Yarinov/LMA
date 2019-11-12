@@ -49,5 +49,8 @@ dependencies {
     implementation 'com.konaire.numeric-keyboard:numeric-keyboard:1.0.5'
     implementation 'io.github.yavski:fab-speed-dial:1.0.6'
     implementation 'com.google.firebase:firebase-database:19.2.0'
+    implementation 'com.hbb20:ccp:2.3.3'
+    implementation 'com.chaos.view:pinview:1.4.3'
+
 
 }

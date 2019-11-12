@@ -1,9 +1,9 @@
 package com.yarinov.lma
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 
 class CreateGroupActivity : AppCompatActivity() {
 

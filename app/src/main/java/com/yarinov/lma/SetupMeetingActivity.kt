@@ -6,25 +6,17 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.*
+import android.widget.CalendarView.OnDateChangeListener
+import androidx.appcompat.app.AppCompatActivity
 import com.yarinov.lma.ChooseFriendActivity.Companion.PERMISSIONS_REQUEST_READ_CONTACTS
 import java.util.*
 import kotlin.collections.ArrayList
-import android.widget.Toast
-import android.widget.CalendarView
-import android.widget.CalendarView.OnDateChangeListener
-import android.text.Editable
-import android.text.TextWatcher
-import androidx.core.app.ComponentActivity
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-
-
 
 
 class SetupMeetingActivity : AppCompatActivity() {
@@ -84,7 +76,7 @@ class SetupMeetingActivity : AppCompatActivity() {
 
         contactList!!.setOnItemClickListener { parent, view, position, id ->
 
-            Toast.makeText(this, "Clicked item :"+" "+position, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Clicked item :" + " " + position, Toast.LENGTH_SHORT).show()
 
             thePerson = contactModelArrayList!![position].getNames()
 
@@ -191,12 +183,12 @@ class SetupMeetingActivity : AppCompatActivity() {
     }
 
 
-    fun toThirdStep(view: View){
+    fun toThirdStep(view: View) {
         secondStepLayout!!.visibility = View.GONE
         thirdStepLayout!!.visibility = View.VISIBLE
     }
 
-    fun openMeetingSummry(view: View){
+    fun openMeetingSummry(view: View) {
         val intent = Intent(this, MeetingSumActivity::class.java)
         intent.putExtra("thePerson", thePerson)
         intent.putExtra("theDate", theDate)

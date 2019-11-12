@@ -1,19 +1,15 @@
 package com.yarinov.lma
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
-
-
-
-
+import androidx.appcompat.app.AppCompatActivity
 
 
 class MeetingSumActivity : AppCompatActivity() {
 
-    private var person:TextView? = null
-    private var place:TextView? = null
-    private var date:TextView? = null
+    private var person: TextView? = null
+    private var place: TextView? = null
+    private var date: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

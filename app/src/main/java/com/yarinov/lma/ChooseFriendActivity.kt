@@ -1,18 +1,16 @@
 package com.yarinov.lma
 
 import android.Manifest
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.provider.ContactsContract
 import android.content.Context
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.os.Build
+import android.os.Bundle
+import android.provider.ContactsContract
 import android.widget.ListView
-import java.util.HashSet
-
-
-
+import androidx.appcompat.app.AppCompatActivity
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ChooseFriendActivity : AppCompatActivity() {
@@ -37,8 +35,6 @@ class ChooseFriendActivity : AppCompatActivity() {
         contactListAdapter = ContactListAdapter(this, contactModelArrayList!!)
         contactList!!.choiceMode = ListView.CHOICE_MODE_MULTIPLE
         contactList!!.adapter = contactListAdapter
-
-
 
 
     }
@@ -126,8 +122,6 @@ class ChooseFriendActivity : AppCompatActivity() {
             }
         }
     }
-
-
 
 
 }

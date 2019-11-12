@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "706027305084-ra5k9oj8vsbdcupg256g0h5jlhba9bqs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yarinov.lma",
+            "certificate_hash": "9a8ce317a2107e0e01a7ddbca3bd8fb2c730c71f"
+          }
+        },
+        {
           "client_id": "706027305084-rvndklatuho79f4hn1n5ur7dr7qa2kq3.apps.googleusercontent.com",
           "client_type": 3
         }

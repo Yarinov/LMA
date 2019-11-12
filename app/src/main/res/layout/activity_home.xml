@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainHomeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/White"
-    android:orientation="vertical"
-    android:id="@+id/drawlayout"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context=".HomeActivity">
+
+    <LinearLayout
+        android:id="@+id/dim_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#70000000"
+        android:orientation="horizontal"
+        android:visibility="invisible" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,26 +35,28 @@
                 android:orientation="horizontal">
 
 
-
                 <io.github.yavski.fabspeeddial.FabSpeedDial
+                    android:id="@+id/menuPopup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    app:fabGravity="top_start"
-                    app:fabMenu="@menu/home_menu"
+                    app:fabBackgroundTint="#fff"
                     app:fabDrawable="@drawable/menu"
                     app:fabDrawableTint="#000"
-                    app:fabBackgroundTint="#fff"
+                    app:fabGravity="top_start"
+                    app:fabMenu="@menu/home_menu"
                     app:miniFabBackgroundTint="@android:color/white"
                     app:miniFabDrawableTint="@color/colorAccent"
-                    app:miniFabTitleTextColor="@color/colorAccent" >
+                    app:miniFabTitleTextColor="@color/colorAccent">
 
                 </io.github.yavski.fabspeeddial.FabSpeedDial>
 
 
                 <LinearLayout
+                    android:id="@+id/titleLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="#00555555"
                     android:orientation="horizontal">
 
                     <TextView
@@ -95,9 +105,11 @@
         </TableRow>
 
         <LinearLayout
+            android:id="@+id/mainIconsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20sp"
+            android:background="#00555555"
             android:orientation="vertical">
 
             <LinearLayout
@@ -199,18 +211,19 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/yourActivityText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15sp"
             android:layout_marginTop="12sp"
+            android:background="#00555555"
             android:fontFamily="@font/pt_sans"
             android:text="Your Activity"
             android:textColor="@color/colorAccent"
             android:textSize="20sp" />
 
         <View
-            android:id="@+id/divider2"
+            android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="15sp"
@@ -218,11 +231,13 @@
             android:background="@color/colorPrimary" />
 
         <ListView
+            android:id="@+id/userActivityList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="15sp"
-            android:layout_marginTop="2sp" />
+            android:layout_marginTop="2sp"
+            android:background="#00555555" />
     </LinearLayout>
 
 
-</androidx.drawerlayout.widget.DrawerLayout>
+</FrameLayout>

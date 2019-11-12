@@ -2,27 +2,26 @@ package com.yarinov.lma
 
 import android.app.ProgressDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Patterns
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.*
-import kotlinx.android.synthetic.main.activity_login2.*
-import com.google.firebase.auth.FirebaseAuth
-import android.widget.Toast
-import com.google.firebase.auth.AuthResult
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnCompleteListener
-import android.util.Patterns
 import com.google.android.gms.tasks.Task
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.android.synthetic.main.activity_login2.*
 
 
 class LoginActivity : AppCompatActivity() {
 
-    var loginLogo:ImageView? = null
+    var loginLogo: ImageView? = null
 
-    var loginFlag:Boolean?=null
+    var loginFlag: Boolean? = null
 
     private var mAuth: FirebaseAuth? = null
 
@@ -42,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    fun login (view : View){
+    fun login(view: View) {
         loginFlag = true
         loginButton.visibility = View.GONE
         signupButton.visibility = View.GONE
@@ -58,7 +57,7 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    fun signup (view : View){
+    fun signup(view: View) {
         loginFlag = true
         loginButton.visibility = View.GONE
         signupButton.visibility = View.GONE
@@ -74,21 +73,21 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    fun loginToApp(view: View){
-         val intent = Intent(this, HomeActivity::class.java)
-         startActivity(intent)
+    fun loginToApp(view: View) {
+        val intent = Intent(this, PhoneVerifyActivity::class.java)
+        startActivity(intent)
     }
 
 
     override fun onBackPressed() {
-        if(loginFlag!!){
+        if (loginFlag!!) {
             super.recreate()
 
-        }else
+        } else
             super.onBackPressed()
     }
 
-    fun signupToFirebase(view: View){
+    fun signupToFirebase(view: View) {
 
         var userName = findViewById<TextInputEditText>(R.id.userNameInput)
         var userEmail = findViewById<TextInputEditText>(R.id.userEmailInput)
@@ -96,18 +95,19 @@ class LoginActivity : AppCompatActivity() {
         var userRePassword = findViewById<TextInputEditText>(R.id.userRePasswordInput)
 
         if (userName.text.isNullOrBlank() || userEmail.text.isNullOrBlank() || userPassword.text.isNullOrBlank()
-            || userRePassword.text.isNullOrBlank()){
+            || userRePassword.text.isNullOrBlank()
+        ) {
             Toast.makeText(this, "Fill All Fields", Toast.LENGTH_SHORT).show()
 
             return
         }
 
-        if(!Patterns.EMAIL_ADDRESS.matcher(userEmail.text).matches()){
+        if (!Patterns.EMAIL_ADDRESS.matcher(userEmail.text).matches()) {
             Toast.makeText(this, "Email Not Valid", Toast.LENGTH_SHORT).show()
             return
         }
 
-        if (!userPassword.text.toString().equals(userRePassword.text.toString())){
+        if (!userPassword.text.toString().equals(userRePassword.text.toString())) {
             Toast.makeText(this, "Incompatible passwords", Toast.LENGTH_SHORT).show()
             return
         }
@@ -115,15 +115,18 @@ class LoginActivity : AppCompatActivity() {
         //Progress dialog for the signup process
         val progressDialog = ProgressDialog(
             this@LoginActivity,
-            R.style.AppTheme)
+            R.style.AppTheme
+        )
         progressDialog.isIndeterminate = true
         progressDialog.setMessage("Creating Account...")
         progressDialog.show()
 
 
 
-        mAuth!!.createUserWithEmailAndPassword(userEmail.text.toString(),
-            userPassword.text.toString())
+        mAuth!!.createUserWithEmailAndPassword(
+            userEmail.text.toString(),
+            userPassword.text.toString()
+        )
             .addOnCompleteListener(this, object : OnCompleteListener<AuthResult> {
                 override fun onComplete(task: Task<AuthResult>) {
                     if (task.isSuccessful()) {
@@ -154,7 +157,7 @@ class LoginActivity : AppCompatActivity() {
                             this@LoginActivity, "Authentication failed.",
                             Toast.LENGTH_SHORT
                         ).show()
-                       // updateUI(null)
+                        // updateUI(null)
                     }
 
                     // ...

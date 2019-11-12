@@ -110,7 +110,7 @@
                 android:text="Login"
                 android:textColor="@color/colorPrimary"
                 android:textSize="22sp"
-                android:onClick="login"/>
+                android:onClick="login" />
 
             <TextView
                 android:id="@+id/register_btn"

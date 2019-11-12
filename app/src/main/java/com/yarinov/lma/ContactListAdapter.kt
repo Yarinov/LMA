@@ -10,7 +10,10 @@ import android.widget.Filterable
 import android.widget.TextView
 
 
-class ContactListAdapter(private val context: Context, private var contactModelArrayList: ArrayList<ContactModel>) : BaseAdapter(),
+class ContactListAdapter(
+    private val context: Context,
+    private var contactModelArrayList: ArrayList<ContactModel>
+) : BaseAdapter(),
     Filterable {
 
     var contactListBackup = contactModelArrayList
@@ -96,7 +99,7 @@ class ContactListAdapter(private val context: Context, private var contactModelA
 
         var nameString = contactModelArrayList[position].getNames()
 
-        var parts  = nameString.split(" ").toMutableList()
+        var parts = nameString.split(" ").toMutableList()
         val firstName = parts.firstOrNull()
         parts.removeAt(0)
         val lastName = parts.joinToString(" ")
@@ -104,7 +107,7 @@ class ContactListAdapter(private val context: Context, private var contactModelA
         holder.tvname!!.setText(nameString)
 
         if (!lastName.equals(""))
-            holder.tvroundname!!.setText(firstName?.get(0).toString() +  lastName[0].toString())
+            holder.tvroundname!!.setText(firstName?.get(0).toString() + lastName[0].toString())
         else
             holder.tvroundname!!.setText(firstName?.get(0).toString())
 
