@@ -15,6 +15,12 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_login2.*
+import com.google.firebase.auth.FirebaseUser
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
+
 
 
 class LoginActivity : AppCompatActivity() {
@@ -28,6 +34,14 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login2)
+
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            // User is signed in
+            val i = Intent(this@LoginActivity, HomeActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(i)
+        }
 
         loginFlag = false
 
@@ -44,6 +58,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun login(view: View) {
+
+
         loginFlag = true
         loginButton.visibility = View.GONE
         signupButton.visibility = View.GONE

@@ -78,6 +78,8 @@
             android:layout_marginRight="25sp"
             android:onClick="toSecondVerifyLayout"
             android:text="Next" />
+
+
     </LinearLayout>
 
     <LinearLayout
