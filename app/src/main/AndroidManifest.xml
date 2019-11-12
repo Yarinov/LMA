@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.yarinov.thefix">
+    package="com.yarinov.lma">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -18,10 +18,6 @@
         <activity android:name=".SetupMeetingActivity" android:theme="@style/CreateGroupTheme"/>
         <activity android:name=".ChooseFriendActivity" />
         <activity
-            android:name=".HomeMenuActivity"
-            android:label="@string/title_activity_home_menu"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".CreateGroupActivity"
             android:theme="@style/CreateGroupTheme" />
         <!--
@@ -36,10 +32,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".TechActivity"
-            android:label="@string/title_activity_tech" />
-        <activity android:name=".CategoriesActivity" />
         <activity
             android:name=".HomeActivity"
             android:theme="@style/HomeTheme" />

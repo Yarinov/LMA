@@ -1,4 +1,4 @@
-package com.yarinov.thefix
+package com.yarinov.lma
 
 import android.Manifest
 import androidx.appcompat.app.AppCompatActivity

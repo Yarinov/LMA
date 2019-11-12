@@ -39,7 +39,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="20sp"
             android:text="With Who?"
-            android:textColor="@color/White"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="28sp" />
 
         <EditText
@@ -71,13 +71,15 @@
             android:layout_height="1dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@color/White" />
+            android:background="@color/colorPrimaryDark" />
 
         <ListView
             android:id="@+id/contactList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10sp"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:layout_marginBottom="5sp"
             android:overScrollMode="never" />
 
     </LinearLayout>
@@ -96,7 +98,7 @@
             android:layout_marginTop="20sp"
             android:gravity="center"
             android:text="When?"
-            android:textColor="@color/White"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="28sp" />
 
         <EditText
@@ -149,7 +151,7 @@
             android:layout_marginTop="20sp"
             android:gravity="center"
             android:text="Where?"
-            android:textColor="@color/White"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="28sp" />
 
         <EditText

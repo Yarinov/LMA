@@ -8,20 +8,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:706027305084:android:b0b5b93767ce2982bab1f9",
+        "mobilesdk_app_id": "1:706027305084:android:215a41b842b10625bab1f9",
         "android_client_info": {
-          "package_name": "com.yarinov.thefix"
+          "package_name": "com.yarinov.lma"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "706027305084-kpg0chva2h0o2g5o2jmetcfptg2ehbt7.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.yarinov.thefix",
-            "certificate_hash": "9a8ce317a2107e0e01a7ddbca3bd8fb2c730c71f"
-          }
-        },
         {
           "client_id": "706027305084-rvndklatuho79f4hn1n5ur7dr7qa2kq3.apps.googleusercontent.com",
           "client_type": 3

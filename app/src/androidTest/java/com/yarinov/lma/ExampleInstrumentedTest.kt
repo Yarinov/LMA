@@ -1,4 +1,4 @@
-package com.yarinov.thefix
+package com.yarinov.lma
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

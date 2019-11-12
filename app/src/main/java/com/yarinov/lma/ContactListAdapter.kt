@@ -1,16 +1,57 @@
-package com.yarinov.thefix
+package com.yarinov.lma
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.TextView
-import android.R.attr.name
 
 
+class ContactListAdapter(private val context: Context, private var contactModelArrayList: ArrayList<ContactModel>) : BaseAdapter(),
+    Filterable {
 
-class ContactListAdapter(private val context: Context, private val contactModelArrayList: ArrayList<ContactModel>) : BaseAdapter() {
+    var contactListBackup = contactModelArrayList
+
+    override fun getFilter(): Filter {
+
+        return object : Filter() {
+
+            override fun publishResults(constraint: CharSequence, results: FilterResults) {
+
+                contactModelArrayList = results.values as ArrayList<ContactModel>
+                notifyDataSetChanged()
+            }
+
+            override fun performFiltering(constraint: CharSequence): FilterResults {
+
+                //Reset the contact list every time to get the result from the total contact
+                contactModelArrayList = contactListBackup
+
+                var constraint = constraint
+
+                val results = FilterResults()
+                val FilteredArrayNames = ArrayList<ContactModel>()
+
+                // perform your search here using the searchConstraint String.
+
+                constraint = constraint.toString().toLowerCase()
+                for (i in 0 until contactModelArrayList.size) {
+                    val dataNames = contactModelArrayList.get(i).getNames()
+                    if (dataNames.toLowerCase().startsWith(constraint.toString())) {
+                        FilteredArrayNames.add(contactModelArrayList.get(i))
+                    }
+                }
+
+                results.count = FilteredArrayNames.size
+                results.values = FilteredArrayNames
+
+                return results
+            }
+        }
+    }
 
     override fun getViewTypeCount(): Int {
         return count

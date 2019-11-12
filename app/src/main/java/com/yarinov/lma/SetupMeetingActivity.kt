@@ -1,4 +1,4 @@
-package com.yarinov.thefix
+package com.yarinov.lma
 
 import android.Manifest
 import android.content.Context
@@ -9,20 +9,21 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.widget.*
-import com.yarinov.thefix.ChooseFriendActivity.Companion.PERMISSIONS_REQUEST_READ_CONTACTS
+import com.yarinov.lma.ChooseFriendActivity.Companion.PERMISSIONS_REQUEST_READ_CONTACTS
 import java.util.*
 import kotlin.collections.ArrayList
 import android.widget.Toast
 import android.widget.CalendarView
 import android.widget.CalendarView.OnDateChangeListener
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.core.app.ComponentActivity
 import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
 
 
 
@@ -66,6 +67,20 @@ class SetupMeetingActivity : AppCompatActivity() {
         //Set the contact list adapter with all the data
         contactListAdapter = ContactListAdapter(this, contactModelArrayList!!)
         contactList!!.adapter = contactListAdapter
+
+        //Filter contact list
+        contactSearchInput!!.addTextChangedListener(object : TextWatcher {
+
+            override fun onTextChanged(cs: CharSequence, arg1: Int, arg2: Int, arg3: Int) {
+                // When user changed the Text
+                this@SetupMeetingActivity.contactListAdapter!!.getFilter().filter(cs)
+            }
+
+            override fun beforeTextChanged(arg0: CharSequence, arg1: Int, arg2: Int, arg3: Int) {}
+
+            override fun afterTextChanged(arg0: Editable) {}
+        })
+
 
         contactList!!.setOnItemClickListener { parent, view, position, id ->
 

@@ -1,4 +1,4 @@
-package com.yarinov.thefix
+package com.yarinov.lma
 
 class ContactModel {
 
