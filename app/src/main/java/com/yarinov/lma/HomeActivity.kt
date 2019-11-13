@@ -3,12 +3,9 @@ package com.yarinov.lma
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.LinearLayout
-import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -25,11 +22,10 @@ import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
 
 class HomeActivity : AppCompatActivity() {
 
-    var titleLayout: LinearLayout? = null
-    var homeLayout: FrameLayout? = null
+    var loadingLayout: LinearLayout? = null
+    var homeLayout: LinearLayout? = null
     var userNameTitle: TextView? = null
     var divider: View? = null
-    var userActivityList: ListView? = null
 
     var user: FirebaseUser? = null
     var post: String? = null
@@ -37,6 +33,12 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        loadingLayout = findViewById(R.id.loadingLayout)
+        homeLayout = findViewById(R.id.homeLayout)
+
+        //Disable home layout till data load
+        homeLayout?.visibility = View.GONE
 
         //Get current user from auth and from database
         user = FirebaseAuth.getInstance().currentUser
@@ -53,7 +55,12 @@ class HomeActivity : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // Get Post object and use the values to update the UI
                 userNameTitle!!.setText("Hello " + dataSnapshot.child("Name").getValue() + "!")
-                // ...
+
+                //Disable loading animation and display the home layout
+                if (loadingLayout?.visibility == View.VISIBLE) {
+                    homeLayout?.visibility = View.VISIBLE
+                    loadingLayout?.visibility = View.GONE
+                }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -63,7 +70,6 @@ class HomeActivity : AppCompatActivity() {
         }
         currentUserRootDatabase.addValueEventListener(postListener)
 
-        titleLayout = findViewById(R.id.dim_layout)
 
         var popupMenu = findViewById<FabSpeedDial>(R.id.menuPopup)
 
@@ -102,18 +108,15 @@ class HomeActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun tecSectionOpen(view: View) {
-        val intent = Intent(this, TechActivity::class.java)
-        startActivity(intent)
-
+    override fun onBackPressed() {
+        minimizeApp()
     }
 
-    override fun onBackPressed() {
-        if (user != null) {
-
-            showPopup()
-        }
-        //super.onBackPressed()
+    fun minimizeApp() {
+        val startMain = Intent(Intent.ACTION_MAIN)
+        startMain.addCategory(Intent.CATEGORY_HOME)
+        startMain.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(startMain)
     }
 
     private fun showPopup() {
@@ -132,5 +135,6 @@ class HomeActivity : AppCompatActivity() {
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
     }
+
 
 }

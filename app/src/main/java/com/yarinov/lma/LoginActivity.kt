@@ -1,5 +1,6 @@
 package com.yarinov.lma
 
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
@@ -56,6 +57,7 @@ class LoginActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
 
     }
+
 
     fun login(view: View) {
 

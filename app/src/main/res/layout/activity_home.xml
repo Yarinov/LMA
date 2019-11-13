@@ -11,14 +11,31 @@
     tools:context=".HomeActivity">
 
     <LinearLayout
-        android:id="@+id/dim_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#70000000"
-        android:orientation="horizontal"
-        android:visibility="invisible" />
+        android:id="@+id/loadingLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/spin_kit"
+            style="@style/SpinKitView.Small.DoubleBounce"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/colorPrimaryDark" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Loading..."
+            android:textSize="25dp" />
+    </LinearLayout>
+
 
     <LinearLayout
+        android:id="@+id/homeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -64,13 +81,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_weight="1"
                         android:fontFamily="@font/pt_sans"
                         android:gravity="center"
                         android:text="LMA"
                         android:textColor="@color/colorPrimary"
                         android:textSize="36sp"
-                        android:textStyle="bold"
-                        android:layout_weight="1"/>
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
