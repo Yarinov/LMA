@@ -22,8 +22,6 @@ import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 
 
-
-
 class LoginActivity : AppCompatActivity() {
 
     var loginLogo: ImageView? = null
@@ -61,19 +59,22 @@ class LoginActivity : AppCompatActivity() {
 
     fun login(view: View) {
 
+        val intent = Intent(this, PhoneVerifyActivity::class.java)
+        intent.putExtra("VerifyType", "Login")
+        startActivity(intent)
 
-        loginFlag = true
-        loginButton.visibility = View.GONE
-        signupButton.visibility = View.GONE
-        loginLogo!!.visibility = View.GONE
-
-        var loginPlat = findViewById<LinearLayout>(R.id.loginPlat)
-        loginPlat.visibility = View.VISIBLE
-        var loginAnimation = AnimationUtils.loadAnimation(this, R.anim.login_ani)
-        loginAnimation.duration = 700
-        loginPlat.animation = loginAnimation
-        loginPlat.animate()
-        loginAnimation.start()
+//        loginFlag = true
+//        loginButton.visibility = View.GONE
+//        signupButton.visibility = View.GONE
+//        loginLogo!!.visibility = View.GONE
+//
+//        var loginPlat = findViewById<LinearLayout>(R.id.loginPlat)
+//        loginPlat.visibility = View.VISIBLE
+//        var loginAnimation = AnimationUtils.loadAnimation(this, R.anim.login_ani)
+//        loginAnimation.duration = 700
+//        loginPlat.animation = loginAnimation
+//        loginPlat.animate()
+//        loginAnimation.start()
 
     }
 
@@ -111,11 +112,8 @@ class LoginActivity : AppCompatActivity() {
 
         var userName = findViewById<TextInputEditText>(R.id.userNameInput)
         var userEmail = findViewById<TextInputEditText>(R.id.userEmailInput)
-        var userPassword = findViewById<TextInputEditText>(R.id.userPasswordInput)
-        var userRePassword = findViewById<TextInputEditText>(R.id.userRePasswordInput)
 
-        if (userName.text.isNullOrBlank() || userEmail.text.isNullOrBlank() || userPassword.text.isNullOrBlank()
-            || userRePassword.text.isNullOrBlank()
+        if (userName.text.isNullOrBlank() || userEmail.text.isNullOrBlank()
         ) {
             Toast.makeText(this, "Fill All Fields", Toast.LENGTH_SHORT).show()
 
@@ -127,19 +125,15 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        if (!userPassword.text.toString().equals(userRePassword.text.toString())) {
-            Toast.makeText(this, "Incompatible passwords", Toast.LENGTH_SHORT).show()
-            return
-        }
 
         val newUserData = HashMap<String, String>()
         newUserData.put("Name", userName.text.toString())
         newUserData.put("Email", userEmail.text.toString())
-        newUserData.put("Password", userPassword.text.toString())
         newUserData.put("Role", "normal")
 
         val toVerifyPhoneIntent = Intent(this, PhoneVerifyActivity::class.java)
         toVerifyPhoneIntent.putExtra("userData", newUserData)
+        toVerifyPhoneIntent.putExtra("VerifyType", "Registration")
 
         startActivity(toVerifyPhoneIntent)
 

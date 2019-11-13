@@ -40,6 +40,7 @@ class PhoneVerifyActivity : AppCompatActivity() {
     var verifyCodeInput: PinView? = null
 
     private var verificationid: String? = null
+    var verifyType: String? = null
 
     var phoneNumber: String? = null
 
@@ -62,7 +63,12 @@ class PhoneVerifyActivity : AppCompatActivity() {
 
         countryCodePicker?.setCountryPreference("IL")
 
-        userData = intent.extras!!.get("userData") as HashMap<String, String>?
+        verifyType = intent.extras!!.get("VerifyType") as String
+
+        if (verifyType!!.equals("Registration")){
+            userData = intent.extras!!.get("userData") as HashMap<String, String>?
+        }
+
     }
 
     private fun startPhoneNumberVerification(phoneNumber: String) {
@@ -99,34 +105,15 @@ class PhoneVerifyActivity : AppCompatActivity() {
         phoneNumber =
             "+" + countryCodePicker!!.selectedCountryCode + phoneNumberInput!!.text.toString()
 
-        var userRef = FirebaseDatabase.getInstance().getReference("Users")
-        userRef.orderByChild("Phone Number").equalTo(phoneNumber)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
+        if (!validatePhoneNumberAndCode()) return
 
-                override fun onDataChange(p0: DataSnapshot) {
-                    if (p0.getValue() != null) {
-                        Toast.makeText(
-                            this@PhoneVerifyActivity,
-                            "There is already a member register with this phone number",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    } else {
-                        if (!validatePhoneNumberAndCode()) return
-
-                        startPhoneNumberVerification(phoneNumber!!)
+        startPhoneNumberVerification(phoneNumber!!)
 
 
-                        firstVerifyLayout!!.visibility = View.GONE
-                        secondVerifyLayout!!.visibility = View.VISIBLE
+        firstVerifyLayout!!.visibility = View.GONE
+        secondVerifyLayout!!.visibility = View.VISIBLE
 
-                        verifyCodeText?.setText("Please type the verification code sent to " + phoneNumber)
-                    }
-                }
-
-            })
+        verifyCodeText?.setText("Please type the verification code sent to " + phoneNumber)
 
     }
 
@@ -163,18 +150,20 @@ class PhoneVerifyActivity : AppCompatActivity() {
                 override fun onComplete(task: Task<AuthResult>) {
                     if (task.isSuccessful()) {
                         //Sign in success, update UI with the signed-in user's information
-                        Toast.makeText(this@PhoneVerifyActivity, "Good", Toast.LENGTH_SHORT).show()
-                        val user = mAuth!!.getCurrentUser()
 
-                        //Get a new user uid and create a new user in the database
-                        var user_id = user!!.getUid()
-                        val currentUserDb =
-                            FirebaseDatabase.getInstance().getReference().child("Users")
-                                .child(user_id)
+                        if (verifyType!!.equals("Registration")){
+                            val user = mAuth!!.getCurrentUser()
 
-                        userData!!.put("Phone Number", phoneNumber!!)
+                            //Get a new user uid and create a new user in the database
+                            var user_id = user!!.getUid()
+                            val currentUserDb =
+                                FirebaseDatabase.getInstance().getReference().child("Users")
+                                    .child(user_id)
 
-                        currentUserDb.setValue(userData)
+                            userData!!.put("Phone Number", phoneNumber!!)
+
+                            currentUserDb.setValue(userData)
+                        }
 
                         //Go to home page after login the new user
                         startActivity(Intent(applicationContext, HomeActivity::class.java))
