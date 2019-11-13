@@ -33,12 +33,16 @@
 
         </androidx.appcompat.widget.Toolbar>
 
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="match_parent"
-            android:layout_height="80sp"
-            android:layout_marginTop="10sp"
-            app:srcCompat="@drawable/twitter_header_photo_1" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_marginTop="15sp"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/twitter_header_photo_1"
+            app:civ_border_width="5dp"
+            app:civ_border_color="@color/colorPrimaryDark"
+            android:layout_gravity="center" />
 
         <TextView
             android:id="@+id/textView3"
@@ -58,7 +62,8 @@
             <com.hbb20.CountryCodePicker
                 android:id="@+id/ccp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                app:ccp_defaultNameCode="IL"/>
 
             <EditText
                 android:id="@+id/phoneNumberInput"

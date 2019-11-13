@@ -20,6 +20,11 @@ import com.google.firebase.auth.FirebaseUser
 import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.net.Uri
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import de.hdodenhof.circleimageview.CircleImageView
 
 
 class LoginActivity : AppCompatActivity() {
@@ -30,19 +35,20 @@ class LoginActivity : AppCompatActivity() {
 
     private var mAuth: FirebaseAuth? = null
 
+    var profilePic: CircleImageView? = null
+    val PICK_IMAGE = 1
+    var imageUri: Uri? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login2)
 
-        val user = FirebaseAuth.getInstance().currentUser
-        if (user != null) {
-            // User is signed in
-            val i = Intent(this@LoginActivity, HomeActivity::class.java)
-            i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(i)
-        }
 
         loginFlag = false
+
+        profilePic = findViewById(R.id.profile_image)
+
+        mAuth = FirebaseAuth.getInstance()
 
         var loginButton = findViewById<Button>(R.id.loginButton)
         var signupButton = findViewById<Button>(R.id.signupButton)
@@ -52,8 +58,23 @@ class LoginActivity : AppCompatActivity() {
 
         loginLogo = findViewById<ImageView>(R.id.logoLogin)
 
-        mAuth = FirebaseAuth.getInstance()
 
+    }
+
+    fun chooseProfilePic(view: View) {
+        var picIntent = Intent()
+        picIntent.type = "image/*"
+        picIntent.action = Intent.ACTION_OPEN_DOCUMENT
+        startActivityForResult(Intent.createChooser(picIntent, "Choose Photo"), PICK_IMAGE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PICK_IMAGE) {
+            imageUri = data!!.data
+            profilePic!!.setImageURI(imageUri)
+        }
     }
 
 
@@ -135,10 +156,16 @@ class LoginActivity : AppCompatActivity() {
         toVerifyPhoneIntent.putExtra("userData", newUserData)
         toVerifyPhoneIntent.putExtra("VerifyType", "Registration")
 
-        startActivity(toVerifyPhoneIntent)
+        if (imageUri == null) {
+            startActivity(toVerifyPhoneIntent)
+        } else {
+            toVerifyPhoneIntent.putExtra("imgSrc", imageUri)
+            startActivity(toVerifyPhoneIntent)
+        }
 
         finish()
 
 
     }
+
 }

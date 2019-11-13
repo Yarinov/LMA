@@ -1,6 +1,7 @@
 package com.yarinov.lma
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -18,10 +19,10 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.hbb20.CountryCodePicker
 import java.util.concurrent.TimeUnit
 
@@ -34,6 +35,8 @@ class PhoneVerifyActivity : AppCompatActivity() {
     var verifyCodeText: TextView? = null
 
     private var mAuth: FirebaseAuth? = null
+    var mStorage: StorageReference? = null
+    var mFirestore: FirebaseFirestore? = null
 
     var phoneNumberInput: EditText? = null
     var countryCodePicker: CountryCodePicker? = null
@@ -45,6 +48,7 @@ class PhoneVerifyActivity : AppCompatActivity() {
     var phoneNumber: String? = null
 
     var userData: HashMap<String, String>? = null
+    var imageUri: Uri? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,14 +63,17 @@ class PhoneVerifyActivity : AppCompatActivity() {
         verifyCodeInput = findViewById(R.id.firstPinView)
         verifyCodeText = findViewById(R.id.verifyCodeText)
 
+        mStorage = FirebaseStorage.getInstance().reference.child("Images")
         mAuth = FirebaseAuth.getInstance()
-
-        countryCodePicker?.setCountryPreference("IL")
+        mFirestore = FirebaseFirestore.getInstance()
 
         verifyType = intent.extras!!.get("VerifyType") as String
 
-        if (verifyType!!.equals("Registration")){
+        if (verifyType!!.equals("Registration")) {
             userData = intent.extras!!.get("userData") as HashMap<String, String>?
+            if (intent.extras!!.get("imgSrc") != null) {
+                imageUri = intent.extras!!.get("imgSrc") as Uri
+            }
         }
 
     }
@@ -139,6 +146,7 @@ class PhoneVerifyActivity : AppCompatActivity() {
         if (credential.smsCode.equals(verifyCodeInput?.text.toString())) {
             signInWithPhoneAuthCredential(credential)
         }
+
     }
 
 
@@ -151,7 +159,7 @@ class PhoneVerifyActivity : AppCompatActivity() {
                     if (task.isSuccessful()) {
                         //Sign in success, update UI with the signed-in user's information
 
-                        if (verifyType!!.equals("Registration")){
+                        if (verifyType!!.equals("Registration")) {
                             val user = mAuth!!.getCurrentUser()
 
                             //Get a new user uid and create a new user in the database
@@ -161,6 +169,29 @@ class PhoneVerifyActivity : AppCompatActivity() {
                                     .child(user_id)
 
                             userData!!.put("Phone Number", phoneNumber!!)
+
+                            //Upload user profile pic
+                            var userProfileImageStorageReference = mStorage!!.child(user_id + ".jpg")
+
+                            //User picked an image
+                            if (imageUri != null) {
+
+                                userProfileImageStorageReference?.putFile(imageUri!!).addOnCompleteListener { task ->
+
+                                    if (task.isSuccessful) {
+                                        var downloadUri =
+                                            task.result!!.storage.downloadUrl.toString()
+                                        userData!!.put("imgUri", downloadUri)
+                                    }
+
+                                }
+                            }
+
+                            //User didn't choose image
+                            else {
+                                userData!!.put("imgUri", "none")
+
+                            }
 
                             currentUserDb.setValue(userData)
                         }
@@ -203,6 +234,8 @@ class PhoneVerifyActivity : AppCompatActivity() {
 
         return true
     }
+
+
 
 
 }

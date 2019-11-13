@@ -30,6 +30,19 @@ class HomeActivity : AppCompatActivity() {
     var user: FirebaseUser? = null
     var post: String? = null
 
+    override fun onStart() {
+        super.onStart()
+
+        user = FirebaseAuth.getInstance().currentUser
+        if (user == null) {
+            // User is not signed in
+            val i = Intent(this@HomeActivity, LoginActivity::class.java)
+            startActivity(i)
+            finish()
+        }
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -42,33 +55,36 @@ class HomeActivity : AppCompatActivity() {
 
         //Get current user from auth and from database
         user = FirebaseAuth.getInstance().currentUser
-        var userId = user!!.uid
+       if (user!=null){
+           var userId = user!!.uid
 
-        val currentUserRootDatabase =
-            FirebaseDatabase.getInstance().getReference().child("Users")
-                .child(userId)
+           val currentUserRootDatabase =
+               FirebaseDatabase.getInstance().getReference().child("Users")
+                   .child(userId)
 
-        userNameTitle = findViewById(R.id.userNameTitle)
+           userNameTitle = findViewById(R.id.userNameTitle)
 
-        //Set home activity according to the user details
-        val postListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // Get Post object and use the values to update the UI
-                userNameTitle!!.setText("Hello " + dataSnapshot.child("Name").getValue() + "!")
+           //Set home activity according to the user details
+           val postListener = object : ValueEventListener {
+               override fun onDataChange(dataSnapshot: DataSnapshot) {
+                   // Get Post object and use the values to update the UI
+                   userNameTitle!!.setText("Hello " + dataSnapshot.child("Name").getValue() + "!")
 
-                //Disable loading animation and display the home layout
-                if (loadingLayout?.visibility == View.VISIBLE) {
-                    homeLayout?.visibility = View.VISIBLE
-                    loadingLayout?.visibility = View.GONE
-                }
-            }
+                   //Disable loading animation and display the home layout
+                   if (loadingLayout?.visibility == View.VISIBLE) {
+                       homeLayout?.visibility = View.VISIBLE
+                       loadingLayout?.visibility = View.GONE
+                   }
+               }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
-                // ...
-            }
-        }
-        currentUserRootDatabase.addValueEventListener(postListener)
+               override fun onCancelled(databaseError: DatabaseError) {
+                   // Getting Post failed, log a message
+                   // ...
+               }
+           }
+           currentUserRootDatabase.addValueEventListener(postListener)
+       }
+
 
 
         var popupMenu = findViewById<FabSpeedDial>(R.id.menuPopup)
