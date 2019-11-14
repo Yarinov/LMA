@@ -176,12 +176,14 @@ class PhoneVerifyActivity : AppCompatActivity() {
                             //User picked an image
                             if (imageUri != null) {
 
+                                userData!!.put("imgUri", "true")
+
                                 userProfileImageStorageReference?.putFile(imageUri!!).addOnCompleteListener { task ->
 
                                     if (task.isSuccessful) {
                                         var downloadUri =
                                             task.result!!.storage.downloadUrl.toString()
-                                        userData!!.put("imgUri", downloadUri)
+
                                     }
 
                                 }
@@ -189,7 +191,7 @@ class PhoneVerifyActivity : AppCompatActivity() {
 
                             //User didn't choose image
                             else {
-                                userData!!.put("imgUri", "none")
+                                userData!!.put("imgUri", "false")
 
                             }
 

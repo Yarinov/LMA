@@ -97,14 +97,16 @@
                         android:gravity="right"
                         android:orientation="vertical">
 
-                        <ImageView
-                            android:id="@+id/imageView"
-                            android:layout_width="50sp"
-                            android:layout_height="56dp"
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/profileImageHome"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:layout_gravity="center"
                             android:layout_marginTop="15sp"
                             android:layout_marginBottom="3sp"
-                            app:srcCompat="@mipmap/ic_launcher_round" />
+                            android:src="@drawable/profile_signup"
+                            app:civ_border_color="@color/colorPrimary"
+                            app:civ_border_width="3dp" />
 
                         <TextView
                             android:id="@+id/userNameTitle"
@@ -113,7 +115,7 @@
                             android:layout_gravity="center|clip_vertical"
                             android:fontFamily="@font/pt_sans"
                             android:text="Hello Yarin!"
-                            android:textColor="@color/colorPrimary"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="18sp" />
                     </LinearLayout>
                 </LinearLayout>
