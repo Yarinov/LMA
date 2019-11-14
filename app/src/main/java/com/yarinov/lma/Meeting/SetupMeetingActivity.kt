@@ -1,4 +1,4 @@
-package com.yarinov.lma
+package com.yarinov.lma.Meeting
 
 import android.Manifest
 import android.content.Context
@@ -14,7 +14,9 @@ import android.view.View
 import android.widget.*
 import android.widget.CalendarView.OnDateChangeListener
 import androidx.appcompat.app.AppCompatActivity
-import com.yarinov.lma.ChooseFriendActivity.Companion.PERMISSIONS_REQUEST_READ_CONTACTS
+import com.yarinov.lma.Meeting.ChooseFriendActivity.Companion.PERMISSIONS_REQUEST_READ_CONTACTS
+import com.yarinov.lma.R
+import com.yarinov.lma.User.ContactModel
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -57,7 +59,8 @@ class SetupMeetingActivity : AppCompatActivity() {
 
 
         //Set the contact list adapter with all the data
-        contactListAdapter = ContactListAdapter(this, contactModelArrayList!!)
+        contactListAdapter =
+            ContactListAdapter(this, contactModelArrayList!!)
         contactList!!.adapter = contactListAdapter
 
         //Filter contact list

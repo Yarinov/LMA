@@ -1,4 +1,4 @@
-package com.yarinov.lma
+package com.yarinov.lma.Authentication
 
 import android.content.Intent
 import android.net.Uri
@@ -24,6 +24,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.hbb20.CountryCodePicker
+import com.yarinov.lma.HomeActivity
+import com.yarinov.lma.R
 import java.util.concurrent.TimeUnit
 
 

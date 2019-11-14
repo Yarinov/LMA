@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/g_yellow_bg"
     android:orientation="vertical"
-    tools:context=".MeetingSumActivity">
+    tools:context=".Meeting.MeetingSumActivity">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"

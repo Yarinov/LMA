@@ -1,4 +1,4 @@
-package com.yarinov.lma
+package com.yarinov.lma.Meeting
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,6 +8,8 @@ import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
+import com.yarinov.lma.R
+import com.yarinov.lma.User.ContactModel
 
 
 class ContactListAdapter(

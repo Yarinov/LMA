@@ -1,8 +1,9 @@
-package com.yarinov.lma
+package com.yarinov.lma.Meeting
 
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.yarinov.lma.R
 
 
 class MeetingSumActivity : AppCompatActivity() {

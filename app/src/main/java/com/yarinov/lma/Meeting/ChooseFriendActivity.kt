@@ -1,4 +1,4 @@
-package com.yarinov.lma
+package com.yarinov.lma.Meeting
 
 import android.Manifest
 import android.content.Context
@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.provider.ContactsContract
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
+import com.yarinov.lma.R
+import com.yarinov.lma.User.ContactModel
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -32,7 +34,8 @@ class ChooseFriendActivity : AppCompatActivity() {
         contactList = findViewById<ListView>(R.id.contactList)
 
 
-        contactListAdapter = ContactListAdapter(this, contactModelArrayList!!)
+        contactListAdapter =
+            ContactListAdapter(this, contactModelArrayList!!)
         contactList!!.choiceMode = ListView.CHOICE_MODE_MULTIPLE
         contactList!!.adapter = contactListAdapter
 

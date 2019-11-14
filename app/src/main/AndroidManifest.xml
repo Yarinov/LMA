@@ -15,16 +15,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PhoneVerifyActivity"></activity>
+        <activity android:name=".Authentication.PhoneVerifyActivity"></activity>
         <activity
-            android:name=".MeetingSumActivity"
+            android:name=".Meeting.MeetingSumActivity"
             android:theme="@style/MeetingSumTheme" />
         <activity
-            android:name=".SetupMeetingActivity"
+            android:name=".Meeting.SetupMeetingActivity"
             android:theme="@style/CreateGroupTheme" />
-        <activity android:name=".ChooseFriendActivity" />
+        <activity android:name=".Meeting.ChooseFriendActivity" />
         <activity
-            android:name=".CreateGroupActivity"
+            android:name=".Meeting.CreateGroupActivity"
             android:theme="@style/CreateGroupTheme" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -49,7 +49,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".Authentication.LoginActivity"
             android:theme="@style/LoginTheme">
         </activity>
 

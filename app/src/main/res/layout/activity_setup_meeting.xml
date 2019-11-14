@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/create_group_bg"
-    tools:context=".SetupMeetingActivity">
+    tools:context=".Meeting.SetupMeetingActivity">
 
     <Toolbar
         android:id="@+id/screenTitle"

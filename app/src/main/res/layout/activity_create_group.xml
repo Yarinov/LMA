@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/create_group_bg"
     android:orientation="vertical"
-    tools:context=".CreateGroupActivity">
+    tools:context=".Meeting.CreateGroupActivity">
 
     <TextView
         android:id="@+id/textView4"

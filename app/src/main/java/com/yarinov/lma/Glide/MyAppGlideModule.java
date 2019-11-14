@@ -1,4 +1,4 @@
-package com.yarinov.lma;
+package com.yarinov.lma.Glide;
 
 import android.content.Context;
 
