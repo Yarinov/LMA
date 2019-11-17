@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.internal.NavigationMenu
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -18,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.yarinov.lma.Authentication.LoginActivity
+import com.yarinov.lma.Glide.GlideApp
 import com.yarinov.lma.Meeting.CreateGroupActivity
 import com.yarinov.lma.Meeting.SetupMeetingActivity
 import de.hdodenhof.circleimageview.CircleImageView
@@ -31,7 +33,7 @@ class HomeActivity : AppCompatActivity() {
     var homeLayout: LinearLayout? = null
     var userNameTitle: TextView? = null
     var profilePic: CircleImageView? = null
-    var divider: View? = null
+    var noActivityText: TextView? = null
 
     var user: FirebaseUser? = null
     var post: String? = null
@@ -56,6 +58,7 @@ class HomeActivity : AppCompatActivity() {
         loadingLayout = findViewById(R.id.loadingLayout)
         homeLayout = findViewById(R.id.homeLayout)
         profilePic = findViewById(R.id.profileImageHome)
+        noActivityText = findViewById(R.id.noActivityText)
 
         //Disable home layout till data load
         homeLayout?.visibility = View.GONE
@@ -86,20 +89,25 @@ class HomeActivity : AppCompatActivity() {
                             storage.getReferenceFromUrl("gs://lma-master.appspot.com/Images/" + userId + ".jpg")
 
 
-                        var storageReference =
-                            FirebaseStorage.getInstance().getReference().child(userId + ".jpg")
-
                         GlideApp.with(applicationContext)
                             .load(gsReference)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
                             .into(profilePic!!)
 
+
                     }
+
+                    noActivityText!!.visibility = View.VISIBLE
 
                     //Disable loading animation and display the home layout
                     if (loadingLayout?.visibility == View.VISIBLE) {
                         homeLayout?.visibility = View.VISIBLE
                         loadingLayout?.visibility = View.GONE
                     }
+
+
+
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
@@ -108,7 +116,11 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
             currentUserRootDatabase.addValueEventListener(postListener)
+
+
         }
+
+
 
 
         var popupMenu = findViewById<FabSpeedDial>(R.id.menuPopup)

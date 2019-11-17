@@ -10,6 +10,8 @@
     android:orientation="vertical"
     tools:context=".HomeActivity">
 
+
+
     <LinearLayout
         android:id="@+id/loadingLayout"
         android:layout_width="wrap_content"
@@ -63,8 +65,8 @@
                     app:fabGravity="top_start"
                     app:fabMenu="@menu/home_menu"
                     app:miniFabBackgroundTint="@android:color/white"
-                    app:miniFabDrawableTint="@color/colorAccent"
-                    app:miniFabTitleTextColor="@color/colorAccent">
+                    app:miniFabDrawableTint="@color/colorPrimaryDark"
+                    app:miniFabTitleTextColor="@color/colorPrimaryDark">
 
                 </io.github.yavski.fabspeeddial.FabSpeedDial>
 
@@ -250,13 +252,26 @@
             android:layout_marginTop="3sp"
             android:background="@color/colorPrimary" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You Don't Have Any Activity"
+            android:layout_gravity="center"
+            android:textSize="20dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:alpha="5"
+            android:layout_marginTop="55dp"
+            android:visibility="gone"
+            android:id="@+id/noActivityText"/>
+
         <ListView
             android:id="@+id/userActivityList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="15sp"
             android:layout_marginTop="2sp"
-            android:background="#00555555" />
+            android:background="#00555555"
+            android:visibility="gone"/>
     </LinearLayout>
 
 

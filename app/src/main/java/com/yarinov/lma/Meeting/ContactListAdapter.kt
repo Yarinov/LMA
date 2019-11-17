@@ -9,12 +9,13 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
 import com.yarinov.lma.R
-import com.yarinov.lma.User.ContactModel
+import com.yarinov.lma.User.User
+import de.hdodenhof.circleimageview.CircleImageView
 
 
 class ContactListAdapter(
     private val context: Context,
-    private var contactModelArrayList: ArrayList<ContactModel>
+    private var contactModelArrayList: ArrayList<User>
 ) : BaseAdapter(),
     Filterable {
 
@@ -26,7 +27,7 @@ class ContactListAdapter(
 
             override fun publishResults(constraint: CharSequence, results: FilterResults) {
 
-                contactModelArrayList = results.values as ArrayList<ContactModel>
+                contactModelArrayList = results.values as ArrayList<User>
                 notifyDataSetChanged()
             }
 
@@ -38,7 +39,7 @@ class ContactListAdapter(
                 var constraint = constraint
 
                 val results = FilterResults()
-                val FilteredArrayNames = ArrayList<ContactModel>()
+                val FilteredArrayNames = ArrayList<User>()
 
                 // perform your search here using the searchConstraint String.
 
@@ -90,7 +91,7 @@ class ContactListAdapter(
             convertView = inflater.inflate(R.layout.lv_item, null, true)
 
             holder.tvname = convertView!!.findViewById(R.id.name) as TextView
-            holder.tvroundname = convertView.findViewById(R.id.shortName) as TextView
+            holder.tvroundpic = convertView.findViewById(R.id.profileImageList) as CircleImageView
 
             convertView.tag = holder
         } else {
@@ -101,24 +102,15 @@ class ContactListAdapter(
 
         var nameString = contactModelArrayList[position].getNames()
 
-        var parts = nameString.split(" ").toMutableList()
-        val firstName = parts.firstOrNull()
-        parts.removeAt(0)
-        val lastName = parts.joinToString(" ")
-
         holder.tvname!!.setText(nameString)
 
-        if (!lastName.equals(""))
-            holder.tvroundname!!.setText(firstName?.get(0).toString() + lastName[0].toString())
-        else
-            holder.tvroundname!!.setText(firstName?.get(0).toString())
 
         return convertView
     }
 
     private inner class ViewHolder {
 
-        var tvroundname: TextView? = null
+        var tvroundpic: CircleImageView? = null
         var tvname: TextView? = null
         var tvnumber: TextView? = null
 

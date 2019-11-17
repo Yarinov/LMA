@@ -26,6 +26,7 @@ import com.google.firebase.storage.StorageReference
 import com.hbb20.CountryCodePicker
 import com.yarinov.lma.HomeActivity
 import com.yarinov.lma.R
+import com.yarinov.lma.User.UserFriend
 import java.util.concurrent.TimeUnit
 
 
@@ -170,7 +171,11 @@ class PhoneVerifyActivity : AppCompatActivity() {
                                 FirebaseDatabase.getInstance().getReference().child("Users")
                                     .child(user_id)
 
+                            val currentUserFriendsDb = FirebaseDatabase.getInstance().getReference().child("Friends")
+                                .child(user_id)
+
                             userData!!.put("Phone Number", phoneNumber!!)
+
 
                             //Upload user profile pic
                             var userProfileImageStorageReference = mStorage!!.child(user_id + ".jpg")
@@ -197,7 +202,10 @@ class PhoneVerifyActivity : AppCompatActivity() {
 
                             }
 
+
                             currentUserDb.setValue(userData)
+                            var b = UserFriend("1XiDrJxNaNOR4BM0bLUXdcpONB23", true)
+                            currentUserFriendsDb.child(b.userFriendId).setValue(true)
                         }
 
                         //Go to home page after login the new user
@@ -239,7 +247,6 @@ class PhoneVerifyActivity : AppCompatActivity() {
         return true
     }
 
-
-
-
 }
+
+

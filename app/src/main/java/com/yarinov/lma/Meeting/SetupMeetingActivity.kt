@@ -1,31 +1,30 @@
 package com.yarinov.lma.Meeting
 
-import android.Manifest
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.database.Cursor
-import android.os.Build
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.*
 import android.widget.CalendarView.OnDateChangeListener
 import androidx.appcompat.app.AppCompatActivity
-import com.yarinov.lma.Meeting.ChooseFriendActivity.Companion.PERMISSIONS_REQUEST_READ_CONTACTS
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.yarinov.lma.HomeActivity
 import com.yarinov.lma.R
-import com.yarinov.lma.User.ContactModel
-import java.util.*
-import kotlin.collections.ArrayList
+import com.yarinov.lma.User.User
 
 
 class SetupMeetingActivity : AppCompatActivity() {
 
     private var contactList: ListView? = null
     private var contactListAdapter: ContactListAdapter? = null
-    private var contactModelArrayList: ArrayList<ContactModel>? = null
+    private var userFriendsObjectArrayList: ArrayList<User> = ArrayList()
+    private var userFriendIdArrayList: ArrayList<String>? = null
 
     private var screenTitle: TextView? = null
     private var dateInput: EditText? = null
@@ -40,11 +39,13 @@ class SetupMeetingActivity : AppCompatActivity() {
     private var theDate: String? = null
     private var thePlace: String? = null
 
+    var user: FirebaseUser? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setup_meeting)
 
-        //screenTitle = findViewById(R.id.screenTitle)
+        user = FirebaseAuth.getInstance().currentUser
 
         dateInput = findViewById(R.id.dateInput)
         contactSearchInput = findViewById(R.id.contactSearchInput)
@@ -53,15 +54,10 @@ class SetupMeetingActivity : AppCompatActivity() {
         secondStepLayout = findViewById(R.id.secondStepLayout)
         thirdStepLayout = findViewById(R.id.thirdStepLayout)
 
-        loadContacts()
-
+        userFriendIdArrayList = ArrayList()
         contactList = findViewById<ListView>(R.id.contactList)
 
-
-        //Set the contact list adapter with all the data
-        contactListAdapter =
-            ContactListAdapter(this, contactModelArrayList!!)
-        contactList!!.adapter = contactListAdapter
+        loadUserFriendsData()
 
         //Filter contact list
         contactSearchInput!!.addTextChangedListener(object : TextWatcher {
@@ -81,13 +77,13 @@ class SetupMeetingActivity : AppCompatActivity() {
 
             Toast.makeText(this, "Clicked item :" + " " + position, Toast.LENGTH_SHORT).show()
 
-            thePerson = contactModelArrayList!![position].getNames()
+            thePerson = userFriendsObjectArrayList!![position].getNames()
 
             firstStepLayout!!.visibility = View.GONE
             secondStepLayout!!.visibility = View.VISIBLE
         }
 
-        //Setup the data
+        //Setup the date
         var calendar = findViewById<CalendarView>(R.id.calendarInput)
 
         calendar.setOnDateChangeListener(OnDateChangeListener { arg0, year, month, date ->
@@ -101,88 +97,75 @@ class SetupMeetingActivity : AppCompatActivity() {
 
     }
 
-    private fun loadContacts() {
+    private fun loadUserFriendsData() {
+
+        var userId = user!!.uid
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(
-                Manifest.permission.READ_CONTACTS
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            requestPermissions(
-                arrayOf(Manifest.permission.READ_CONTACTS),
-                PERMISSIONS_REQUEST_READ_CONTACTS
-            )
-            //callback onRequestPermissionsResult
-        } else {
-            loadContactsFunction(this)
+        val currentUserFriendRootDatabase =
+            FirebaseDatabase.getInstance().getReference().child("Friends")
+                .child(userId)
 
-        }
-    }
+        //Set home activity according to the user details
+        val postListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // Get Post object and use the values to update the UI
 
-    private fun loadContactsFunction(context: Context) {
-        val projection = arrayOf(
-            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-            ContactsContract.CommonDataKinds.Phone.NUMBER,
-            ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER
-        )//plus any other properties you wish to query
-
-        contactModelArrayList = ArrayList()
-
-        var cursor: Cursor? = null
-        try {
-            cursor = context.getContentResolver().query(
-                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                projection,
-                null,
-                null,
-                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC"
-            )
-        } catch (e: SecurityException) {
-            //SecurityException can be thrown if we don't have the right permissions
-        }
-
-        if (cursor != null) {
-            try {
-                val normalizedNumbersAlreadyFound = HashSet<String>()
-                val indexOfNormalizedNumber =
-                    cursor!!.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER)
-                val indexOfDisplayName =
-                    cursor!!.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
-                val indexOfDisplayNumber =
-                    cursor!!.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
-
-                while (cursor!!.moveToNext()) {
-                    val normalizedNumber = cursor!!.getString(indexOfNormalizedNumber)
-                    if (normalizedNumbersAlreadyFound.add(normalizedNumber)) {
-                        val displayName = cursor!!.getString(indexOfDisplayName)
-                        val displayNumber = cursor!!.getString(indexOfDisplayNumber)
-                        //haven't seen this number yet: do something with this contact!
-
-                        val contactModel = ContactModel()
-                        contactModel.setNames(displayName)
-                        contactModel.setNumbers(displayNumber)
-                        contactModelArrayList!!.add(contactModel)
-                    } else {
-                        //don't do anything with this contact because we've already found this number
-                    }
+                //Get all user friend
+                for (childDataSnapshot in dataSnapshot.children) {
+                    val userFriendData = childDataSnapshot.key
+                    userFriendIdArrayList!!.add(userFriendData!!)
+                    //contactListAdapter!!.notifyDataSetChanged()
                 }
-            } finally {
-                cursor!!.close()
+
+                loadContactsToAdapter()
+
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Getting Post failed, log a message
+                // ...
+
             }
         }
+        currentUserFriendRootDatabase.addValueEventListener(postListener)
+
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                loadContacts()
-            } else {
-                //  toast("Permission must be granted in order to display contacts information")
+    private fun loadContactsToAdapter() {
+
+        for (userFriendId in userFriendIdArrayList!!) {
+
+            var currentUserFriendRootDatabase =
+                FirebaseDatabase.getInstance().getReference().child("Users")
+                    .child(userFriendId)
+
+            //Set home activity according to the user details
+            val postListener = object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    // Get Post object and use the values to update the UI
+                    var userTemp = User(dataSnapshot.child("Name").value as String, "")
+                    userFriendsObjectArrayList!!.add(userTemp)
+
+                    //Set the contact list adapter with all the data
+                    System.out.println(userFriendsObjectArrayList)
+                    contactListAdapter =
+                        ContactListAdapter(this@SetupMeetingActivity, userFriendsObjectArrayList)
+                    contactList!!.adapter = contactListAdapter
+
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // Getting Post failed, log a message
+                    // ...
+
+                }
             }
+            currentUserFriendRootDatabase.addValueEventListener(postListener)
+
+
         }
+
     }
 
 
@@ -196,6 +179,12 @@ class SetupMeetingActivity : AppCompatActivity() {
         intent.putExtra("thePerson", thePerson)
         intent.putExtra("theDate", theDate)
         intent.putExtra("thePlace", thePlace)
+        startActivity(intent)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
     }
 }
