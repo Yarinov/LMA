@@ -1,6 +1,7 @@
 package com.yarinov.lma.Meeting
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,9 +9,15 @@ import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageException
+import com.yarinov.lma.Glide.GlideApp
 import com.yarinov.lma.R
 import com.yarinov.lma.User.User
 import de.hdodenhof.circleimageview.CircleImageView
+
+
 
 
 class ContactListAdapter(
@@ -18,6 +25,8 @@ class ContactListAdapter(
     private var contactModelArrayList: ArrayList<User>
 ) : BaseAdapter(),
     Filterable {
+
+    private val TAG = "ContactListAdapter"
 
     var contactListBackup = contactModelArrayList
 
@@ -104,6 +113,29 @@ class ContactListAdapter(
 
         holder.tvname!!.setText(nameString)
 
+        //Get user pic (if exits)
+        val storage = FirebaseStorage.getInstance()
+
+        val gsReference =
+            storage.getReferenceFromUrl("gs://lma-master.appspot.com/Images/" + contactModelArrayList[position].getId() + ".jpg")
+
+        gsReference.downloadUrl
+            .addOnSuccessListener {
+
+
+                GlideApp.with(context)
+                    .load(gsReference)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .into(holder.tvroundpic!!)
+            }
+            .addOnFailureListener { exception ->
+                val errorCode = (exception as StorageException).errorCode
+                if (errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                   //Not Found
+                    Log.i(TAG, "Not found " + nameString)
+                }
+            }
 
         return convertView
     }
@@ -112,7 +144,6 @@ class ContactListAdapter(
 
         var tvroundpic: CircleImageView? = null
         var tvname: TextView? = null
-        var tvnumber: TextView? = null
 
     }
 }

@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS"/>
+    <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS" />
 
     <application
         android:icon="@mipmap/ic_launcher"
@@ -15,16 +15,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Authentication.PhoneVerifyActivity"></activity>
+        <activity android:name=".Info.AboutActivity"
+            android:theme="@style/MeetingSumTheme"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Authentication.PhoneVerifyActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Meeting.MeetingSumActivity"
-            android:theme="@style/MeetingSumTheme" />
+            android:theme="@style/MeetingSumTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Meeting.SetupMeetingActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/CreateGroupTheme" />
         <activity android:name=".Meeting.ChooseFriendActivity" />
         <activity
             android:name=".Meeting.CreateGroupActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/CreateGroupTheme" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -40,8 +47,8 @@
 
         <activity
             android:name=".HomeActivity"
-            android:theme="@style/HomeTheme" >
-
+            android:theme="@style/HomeTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -50,8 +57,8 @@
         </activity>
         <activity
             android:name=".Authentication.LoginActivity"
-            android:theme="@style/LoginTheme">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginTheme"></activity>
 
         <meta-data
             android:name="preloaded_fonts"

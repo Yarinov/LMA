@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Lma</string>
+    <string name="app_name">LMA</string>
     <string name="title_activity_tech">Map</string>
     <string name="title_activity_home_menu">HomeMenuActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

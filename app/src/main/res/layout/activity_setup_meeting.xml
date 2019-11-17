@@ -1,184 +1,217 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/create_group_bg"
+    android:orientation="vertical"
     tools:context=".Meeting.SetupMeetingActivity">
 
-    <Toolbar
-        android:id="@+id/screenTitle"
-        android:layout_width="match_parent"
-        android:layout_height="80sp"
-        android:background="@color/colorPrimaryDark">
-
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12sp"
-            android:gravity="center"
-            android:text="Setup Meeting"
-            android:textColor="@color/White"
-            android:textSize="22sp" />
-
-    </Toolbar>
-
     <LinearLayout
-        android:id="@+id/firstStepLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="visible">
+        android:id="@+id/loadingLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/spin_kit"
+            style="@style/SpinKitView.Small.DoubleBounce"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/colorPrimaryDark" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="20sp"
-            android:text="With Who?"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="28sp" />
+            android:text="Loading..."
+            android:textSize="25dp" />
+    </LinearLayout>
 
-        <EditText
-            android:id="@+id/contactSearchInput"
+    <LinearLayout
+        android:id="@+id/meetingLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <Toolbar
+            android:id="@+id/screenTitle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8sp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="8sp"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="Search"
-            android:inputType="textPersonName"
-            android:textColor="@color/colorAccent"
-            android:textSize="33dp" />
+            android:layout_height="80sp"
+            android:background="@color/colorPrimaryDark">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10sp"
-            android:layout_marginTop="7sp"
-            android:text="My Contact"
-            android:textColor="@color/colorAccent"
-            android:textSize="22dp" />
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12sp"
+                android:gravity="center"
+                android:text="Setup Meeting"
+                android:textColor="@color/White"
+                android:textSize="22sp" />
 
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@color/colorPrimaryDark" />
+        </Toolbar>
 
-        <ListView
-            android:id="@+id/contactList"
+        <LinearLayout
+            android:id="@+id/firstStepLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10sp"
-            android:layout_marginRight="10sp"
-            android:layout_marginBottom="5sp"
-            android:overScrollMode="never" />
+            android:orientation="vertical"
+            android:visibility="visible">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20sp"
+                android:text="With Who?"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="28sp" />
 
-    <LinearLayout
-        android:id="@+id/secondStepLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/textView10"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20sp"
-            android:gravity="center"
-            android:text="When?"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="28sp" />
-
-        <EditText
-            android:id="@+id/dateInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10sp"
-            android:layout_marginTop="10sp"
-            android:layout_marginRight="10sp"
-            android:ems="10"
-            android:enabled="false"
-            android:focusable="false"
-            android:gravity="center"
-            android:hint="DD/MM/YYYY"
-            android:inputType="date"
-            android:textColor="@color/colorAccent"
-            android:textSize="33dp" />
-
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="17sp">
-
-            <CalendarView
-                android:id="@+id/calendarInput"
+            <EditText
+                android:id="@+id/contactSearchInput"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </androidx.cardview.widget.CardView>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="8sp"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="Search"
+                android:inputType="textPersonName"
+                android:textColor="@color/colorAccent"
+                android:textSize="33dp" />
 
-        <Button
-            android:id="@+id/toWhereButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="toThirdStep"
-            android:text="Button" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10sp"
+                android:layout_marginTop="7sp"
+                android:text="My Contact"
+                android:textColor="@color/colorAccent"
+                android:textSize="22dp" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/colorPrimaryDark" />
+
+            <ListView
+                android:id="@+id/contactList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10sp"
+                android:layout_marginRight="10sp"
+                android:layout_marginBottom="5sp"
+                android:overScrollMode="never" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/thirdStepLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20sp"
+                android:gravity="center"
+                android:text="Where?"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="28sp" />
+
+            <EditText
+                android:id="@+id/locationInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="8sp"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="Location"
+                android:inputType="textPersonName"
+                android:textColor="@color/colorAccent"
+                android:textSize="33dp" />
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Choose From Maps" />
+
+            <Button
+                android:id="@+id/button5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="openMeetingSummry"
+                android:text="Next" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/secondStepLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20sp"
+                android:gravity="center"
+                android:text="When?"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="28sp" />
+
+            <EditText
+                android:id="@+id/dateInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10sp"
+                android:layout_marginTop="10sp"
+                android:layout_marginRight="10sp"
+                android:ems="10"
+                android:enabled="false"
+                android:focusable="false"
+                android:gravity="center"
+                android:hint="DD/MM/YYYY"
+                android:inputType="date"
+                android:textColor="@color/colorAccent"
+                android:textSize="33dp" />
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="17sp">
+
+                <CalendarView
+                    android:id="@+id/calendarInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/toWhereButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="toThirdStep"
+                android:text="Button" />
+        </LinearLayout>
+
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/thirdStepLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/textView11"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20sp"
-            android:gravity="center"
-            android:text="Where?"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="28sp" />
-
-        <EditText
-            android:id="@+id/contactSearchInput2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8sp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="8sp"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="Location"
-            android:inputType="textPersonName"
-            android:textColor="@color/colorAccent"
-            android:textSize="33dp" />
-
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Choose From Maps" />
-
-        <Button
-            android:id="@+id/button5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="openMeetingSummry"
-            android:text="Next" />
-    </LinearLayout>
-
-</LinearLayout>
+</FrameLayout>

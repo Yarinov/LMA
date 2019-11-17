@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.yarinov.lma.Authentication.LoginActivity
 import com.yarinov.lma.Glide.GlideApp
+import com.yarinov.lma.Info.AboutActivity
 import com.yarinov.lma.Meeting.CreateGroupActivity
 import com.yarinov.lma.Meeting.SetupMeetingActivity
 import de.hdodenhof.circleimageview.CircleImageView
@@ -139,6 +140,10 @@ class HomeActivity : AppCompatActivity() {
                         showPopup()
                     }
 
+                    "About" -> {
+                        aboutOpen()
+                    }
+
                 }
                 return false
             }
@@ -152,6 +157,11 @@ class HomeActivity : AppCompatActivity() {
 
     fun createGroupSectionOpen(view: View) {
         val intent = Intent(this, CreateGroupActivity::class.java)
+        startActivity(intent)
+    }
+
+    fun aboutOpen() {
+        val intent = Intent(this, AboutActivity::class.java)
         startActivity(intent)
     }
 

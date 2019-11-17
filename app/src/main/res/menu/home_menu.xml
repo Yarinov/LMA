@@ -12,7 +12,7 @@
         <item
             android:id="@+id/m_about"
             android:title="About"
-            android:icon="@drawable/ic_whatshot" />
+            android:icon="@drawable/about_ic" />
         <item
             android:id="@+id/m_contact"
             android:title="Contact Us"

@@ -204,8 +204,6 @@ class PhoneVerifyActivity : AppCompatActivity() {
 
 
                             currentUserDb.setValue(userData)
-                            var b = UserFriend("1XiDrJxNaNOR4BM0bLUXdcpONB23", true)
-                            currentUserFriendsDb.child(b.userFriendId).setValue(true)
                         }
 
                         //Go to home page after login the new user

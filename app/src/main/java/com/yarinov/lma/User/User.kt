@@ -3,11 +3,11 @@ package com.yarinov.lma.User
 class User {
 
     var userName: String? = null
-    var userImage: String? = null
+    var userId: String? = null
 
     constructor(name: String?, image: String?) {
         this.userName = name
-        this.userImage = image
+        this.userId = image
     }
 
     fun setNames(name: String) {
@@ -18,12 +18,12 @@ class User {
         return userName.toString()
     }
 
-    fun getImage(): String {
-        return userImage.toString()
+    fun getId(): String {
+        return userId.toString()
     }
 
-    fun setImage(name: String) {
-        this.userImage = userImage
+    fun setId(name: String) {
+        this.userId = userId
     }
 
 

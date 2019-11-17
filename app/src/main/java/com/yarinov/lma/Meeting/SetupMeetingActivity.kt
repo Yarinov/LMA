@@ -3,6 +3,7 @@ package com.yarinov.lma.Meeting
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View
 import android.widget.*
@@ -29,13 +30,17 @@ class SetupMeetingActivity : AppCompatActivity() {
     private var screenTitle: TextView? = null
     private var dateInput: EditText? = null
     private var contactSearchInput: EditText? = null
+    private var locationInput: EditText? = null
 
     private var firstStepLayout: LinearLayout? = null
     private var secondStepLayout: LinearLayout? = null
     private var thirdStepLayout: LinearLayout? = null
+    private var loadingLayout: LinearLayout? = null
+    private var meetingLayout: LinearLayout? = null
 
 
-    private var thePerson: String? = null
+    private var theFriendName: String? = null
+    private var theFriendId: String? = null
     private var theDate: String? = null
     private var thePlace: String? = null
 
@@ -49,6 +54,10 @@ class SetupMeetingActivity : AppCompatActivity() {
 
         dateInput = findViewById(R.id.dateInput)
         contactSearchInput = findViewById(R.id.contactSearchInput)
+        locationInput = findViewById(R.id.locationInput)
+
+        loadingLayout = findViewById(R.id.loadingLayout)
+        meetingLayout = findViewById(R.id.meetingLayout)
 
         firstStepLayout = findViewById(R.id.firstStepLayout)
         secondStepLayout = findViewById(R.id.secondStepLayout)
@@ -56,6 +65,7 @@ class SetupMeetingActivity : AppCompatActivity() {
 
         userFriendIdArrayList = ArrayList()
         contactList = findViewById<ListView>(R.id.contactList)
+
 
         loadUserFriendsData()
 
@@ -77,7 +87,8 @@ class SetupMeetingActivity : AppCompatActivity() {
 
             Toast.makeText(this, "Clicked item :" + " " + position, Toast.LENGTH_SHORT).show()
 
-            thePerson = userFriendsObjectArrayList!![position].getNames()
+            theFriendName = userFriendsObjectArrayList!![position].getNames()
+            theFriendId = userFriendsObjectArrayList!![position].getId()
 
             firstStepLayout!!.visibility = View.GONE
             secondStepLayout!!.visibility = View.VISIBLE
@@ -120,6 +131,9 @@ class SetupMeetingActivity : AppCompatActivity() {
 
                 loadContactsToAdapter()
 
+                loadingLayout!!.visibility = View.GONE
+                meetingLayout!!.visibility = View.VISIBLE
+
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -144,7 +158,7 @@ class SetupMeetingActivity : AppCompatActivity() {
             val postListener = object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     // Get Post object and use the values to update the UI
-                    var userTemp = User(dataSnapshot.child("Name").value as String, "")
+                    var userTemp = User(dataSnapshot.child("Name").value as String, userFriendId)
                     userFriendsObjectArrayList!!.add(userTemp)
 
                     //Set the contact list adapter with all the data
@@ -175,10 +189,18 @@ class SetupMeetingActivity : AppCompatActivity() {
     }
 
     fun openMeetingSummry(view: View) {
+
+        val location = locationInput?.text.toString()
+        if (TextUtils.isEmpty(location)) {
+            Toast.makeText(this, "Invalid Location", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val intent = Intent(this, MeetingSumActivity::class.java)
-        intent.putExtra("thePerson", thePerson)
+        intent.putExtra("theFriendName", theFriendName)
         intent.putExtra("theDate", theDate)
-        intent.putExtra("thePlace", thePlace)
+        intent.putExtra("thePlace", location)
+        intent.putExtra("friendId", theFriendId)
         startActivity(intent)
     }
 
