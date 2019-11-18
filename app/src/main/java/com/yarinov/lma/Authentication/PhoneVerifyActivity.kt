@@ -27,7 +27,9 @@ import com.hbb20.CountryCodePicker
 import com.yarinov.lma.HomeActivity
 import com.yarinov.lma.R
 import com.yarinov.lma.User.UserFriend
+import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.HashMap
 
 
 class PhoneVerifyActivity : AppCompatActivity() {
@@ -161,18 +163,16 @@ class PhoneVerifyActivity : AppCompatActivity() {
                 override fun onComplete(task: Task<AuthResult>) {
                     if (task.isSuccessful()) {
                         //Sign in success, update UI with the signed-in user's information
+                        val user = mAuth!!.getCurrentUser()
+
+                        //Get a user uid and user database root
+                        var user_id = user!!.getUid()
+                        val currentUserDb =
+                            FirebaseDatabase.getInstance().getReference().child("Users")
+                                .child(user_id)
 
                         if (verifyType!!.equals("Registration")) {
-                            val user = mAuth!!.getCurrentUser()
 
-                            //Get a new user uid and create a new user in the database
-                            var user_id = user!!.getUid()
-                            val currentUserDb =
-                                FirebaseDatabase.getInstance().getReference().child("Users")
-                                    .child(user_id)
-
-                            val currentUserFriendsDb = FirebaseDatabase.getInstance().getReference().child("Friends")
-                                .child(user_id)
 
                             userData!!.put("Phone Number", phoneNumber!!)
 
@@ -206,9 +206,19 @@ class PhoneVerifyActivity : AppCompatActivity() {
                             currentUserDb.setValue(userData)
                         }
 
-                        //Go to home page after login the new user
-                        startActivity(Intent(applicationContext, HomeActivity::class.java))
-                        finish()
+                        user!!.getIdToken(true).addOnSuccessListener { tokenResult ->
+                            var tokenId = tokenResult.token
+
+
+                            currentUserDb.child("tokenId").setValue(tokenId)
+
+
+                            //Go to home page after login the new user
+                            startActivity(Intent(applicationContext, HomeActivity::class.java))
+                            finish()
+                        }
+
+
                         //updateUI(user)
                     } else {
                         // If sign in fails, display a message to the user.

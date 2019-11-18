@@ -108,7 +108,6 @@ class HomeActivity : AppCompatActivity() {
                     }
 
 
-
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
@@ -120,8 +119,6 @@ class HomeActivity : AppCompatActivity() {
 
 
         }
-
-
 
 
         var popupMenu = findViewById<FabSpeedDial>(R.id.menuPopup)
@@ -193,10 +190,21 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun logout() {
-        FirebaseAuth.getInstance().signOut()
-        startActivity(Intent(this, LoginActivity::class.java))
-        finish()
+
+        //Get a user uid and user database root to remove the token id from this user before logout
+        var user_id = user!!.getUid()
+        val currentUserTokenIdDb =
+            FirebaseDatabase.getInstance().getReference().child("Users")
+                .child(user_id).child("tokenId")
+
+        currentUserTokenIdDb.setValue("").addOnSuccessListener {
+            FirebaseAuth.getInstance().signOut()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+        }
+
     }
 
 
 }
+
