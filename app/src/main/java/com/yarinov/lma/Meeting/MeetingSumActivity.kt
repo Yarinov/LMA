@@ -2,12 +2,9 @@ package com.yarinov.lma.Meeting
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.yarinov.lma.R
@@ -50,23 +47,39 @@ class MeetingSumActivity : AppCompatActivity() {
 
     fun sendMeeting(view: View) {
 
-        var notificationId = UUID.randomUUID()
+        var receivedNotificationId = UUID.randomUUID()
+        var sentNotificationId = UUID.randomUUID()
         var myId = FirebaseAuth.getInstance().currentUser!!.uid
 
-        var meetingData = HashMap<String, String>()
-        meetingData.put("from", myId)
-        meetingData.put("date", date!!)
-        meetingData.put("place", place!!)
+        var receivedMeetingData = HashMap<String, String>()
+        receivedMeetingData.put("from", myId)
+        receivedMeetingData.put("date", date!!)
+        receivedMeetingData.put("place", place!!)
+        receivedMeetingData.put("type", "received")
 
-        System.out.println(meetingData)
         val currentFriendNotificationsDb =
             FirebaseDatabase.getInstance().getReference().child("Users")
-                .child(friendId!!).child("Notifications").child(notificationId.toString())
+                .child(friendId!!).child("Notifications").child(receivedNotificationId.toString())
 
-        currentFriendNotificationsDb.setValue(meetingData).addOnSuccessListener {
+
+        var sentMeetingData = HashMap<String, String>()
+        sentMeetingData.put("to", friendId!!)
+        sentMeetingData.put("date", date!!)
+        sentMeetingData.put("place", place!!)
+        sentMeetingData.put("type", "sent")
+
+        val currentUserNotificationsDb =
+            FirebaseDatabase.getInstance().getReference().child("Users")
+                .child(myId!!).child("Notifications").child(sentNotificationId.toString())
+
+        currentFriendNotificationsDb.setValue(receivedMeetingData).addOnSuccessListener {
             // Write was successful!
             // ...
-            Toast.makeText(this, "MSG SENT!", Toast.LENGTH_SHORT)
+
+            currentUserNotificationsDb.setValue(sentMeetingData).addOnSuccessListener {
+                Toast.makeText(this, "MSG SENT!", Toast.LENGTH_SHORT).show()
+                finish()
+            }
         }
             .addOnFailureListener {
                 // Write failed

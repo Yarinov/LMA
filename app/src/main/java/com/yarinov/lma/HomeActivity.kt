@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +24,8 @@ import com.yarinov.lma.Glide.GlideApp
 import com.yarinov.lma.Info.AboutActivity
 import com.yarinov.lma.Meeting.CreateGroupActivity
 import com.yarinov.lma.Meeting.SetupMeetingActivity
+import com.yarinov.lma.Notification.NotificationAdapter
+import com.yarinov.lma.Notification.customNotification
 import de.hdodenhof.circleimageview.CircleImageView
 import io.github.yavski.fabspeeddial.FabSpeedDial
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
@@ -35,9 +38,13 @@ class HomeActivity : AppCompatActivity() {
     var userNameTitle: TextView? = null
     var profilePic: CircleImageView? = null
     var noActivityText: TextView? = null
+    var userNotificationList: ListView? = null
 
     var user: FirebaseUser? = null
     var post: String? = null
+
+    private var notificationListAdapter: NotificationAdapter? = null
+    private var notificationArrayList: ArrayList<customNotification> = ArrayList()
 
     override fun onStart() {
         super.onStart()
@@ -60,6 +67,7 @@ class HomeActivity : AppCompatActivity() {
         homeLayout = findViewById(R.id.homeLayout)
         profilePic = findViewById(R.id.profileImageHome)
         noActivityText = findViewById(R.id.noActivityText)
+        userNotificationList = findViewById(R.id.userNotificationList)
 
         //Disable home layout till data load
         homeLayout?.visibility = View.GONE
@@ -79,7 +87,8 @@ class HomeActivity : AppCompatActivity() {
             val postListener = object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     // Get Post object and use the values to update the UI
-                    userNameTitle!!.setText("Hello " + dataSnapshot.child("Name").getValue() + "!")
+                    var myName = dataSnapshot.child("Name").getValue()
+                    userNameTitle!!.setText("Hello " + myName + "!")
 
                     //If the user have a profile pic
                     if (dataSnapshot.child("imgUri").getValue()!!.equals("true")) {
@@ -99,12 +108,15 @@ class HomeActivity : AppCompatActivity() {
 
                     }
 
-                    noActivityText!!.visibility = View.VISIBLE
+
+                    //Get all the user notifications TODO Convert all this part to a function
+                    loadNotification(userId, myName)
 
                     //Disable loading animation and display the home layout
                     if (loadingLayout?.visibility == View.VISIBLE) {
                         homeLayout?.visibility = View.VISIBLE
                         loadingLayout?.visibility = View.GONE
+                        noActivityText!!.visibility = View.VISIBLE
                     }
 
 
@@ -203,6 +215,80 @@ class HomeActivity : AppCompatActivity() {
             finish()
         }
 
+    }
+
+    private fun loadNotification(userId: String, myName: Any?) {
+
+
+        val currentUserNotificationDatabase =
+            FirebaseDatabase.getInstance().getReference().child("Users")
+                .child(userId).child("Notifications")
+
+        //Set home activity according to the user details
+        val notificationsListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // Get Post object and use the values to update the UI
+
+                //Get all user friend
+                for (childDataSnapshot in dataSnapshot.children) {
+                    val notificationType = childDataSnapshot.child("type").value
+
+                    var friendId = ""
+
+                    if (notificationType!!.equals("sent")) {
+                        friendId = childDataSnapshot.child("to").value as String
+                    }else{
+                        friendId = childDataSnapshot.child("from").value as String
+                    }
+                        var date = childDataSnapshot.child("date").value
+                        var place = childDataSnapshot.child("place").value
+
+                        //Get Friend Name
+                        val currentUserFriendDatabase =
+                            FirebaseDatabase.getInstance().getReference().child("Users")
+                                .child(friendId).child("Name")
+
+                        val getUserNameListener = object : ValueEventListener {
+
+                            override fun onDataChange(p0: DataSnapshot) {
+                                var toName = p0.value
+
+                                var notificationObject = customNotification(
+                                    userId,
+                                    myName as String?, friendId,
+                                    toName as String?,
+                                    date as String?, place as String?, notificationType as String?
+                                )
+
+                                notificationArrayList.add(notificationObject)
+                                notificationListAdapter = NotificationAdapter(this@HomeActivity, notificationArrayList)
+                                userNotificationList!!.adapter = notificationListAdapter
+                                userNotificationList!!.visibility = View.VISIBLE
+                                noActivityText!!.visibility = View.GONE
+
+
+                            }
+
+                            override fun onCancelled(p0: DatabaseError) {
+                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+
+                        }
+
+                        currentUserFriendDatabase.addValueEventListener(getUserNameListener)
+                    //contactListAdapter!!.notifyDataSetChanged()
+                }
+
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Getting Post failed, log a message
+                // ...
+
+            }
+        }
+
+        currentUserNotificationDatabase.addValueEventListener(notificationsListener)
     }
 
 

@@ -162,7 +162,6 @@ class SetupMeetingActivity : AppCompatActivity() {
                     userFriendsObjectArrayList!!.add(userTemp)
 
                     //Set the contact list adapter with all the data
-                    System.out.println(userFriendsObjectArrayList)
                     contactListAdapter =
                         ContactListAdapter(this@SetupMeetingActivity, userFriendsObjectArrayList)
                     contactList!!.adapter = contactListAdapter

@@ -152,7 +152,7 @@
                         android:layout_height="75sp"
                         android:layout_gravity="center"
                         android:onClick="setupMeetingSectionOpen"
-                        app:srcCompat="@drawable/meeting_icn" />
+                        app:srcCompat="@drawable/group_icn" />
 
                     <TextView
                         android:id="@+id/textView7"
@@ -175,7 +175,7 @@
                         android:layout_height="75sp"
                         android:layout_gravity="center"
                         android:onClick="createGroupSectionOpen"
-                        app:srcCompat="@drawable/group_icn" />
+                        app:srcCompat="@drawable/meeting_icn" />
 
                     <TextView
                         android:id="@+id/textView7"
@@ -199,13 +199,14 @@
                         android:layout_width="75sp"
                         android:layout_height="75sp"
                         android:layout_gravity="center"
-                        app:srcCompat="@drawable/invite_friend" />
+                        app:srcCompat="@drawable/settings" />
 
                     <TextView
                         android:id="@+id/textView7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Invite Friend" />
+                        android:layout_gravity="center"
+                        android:text="Friends" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -218,14 +219,13 @@
                         android:layout_width="75sp"
                         android:layout_height="75sp"
                         android:layout_gravity="center"
-                        app:srcCompat="@drawable/settings" />
+                        app:srcCompat="@drawable/invite_friend" />
 
                     <TextView
                         android:id="@+id/textView7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Settings" />
+                        android:text="Invite Friend" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -241,7 +241,7 @@
             android:background="#00555555"
             android:fontFamily="@font/pt_sans"
             android:text="Your Activity"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="20sp" />
 
         <View
@@ -265,13 +265,15 @@
             android:id="@+id/noActivityText"/>
 
         <ListView
-            android:id="@+id/userActivityList"
+            android:id="@+id/userNotificationList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="15sp"
             android:layout_marginTop="2sp"
             android:background="#00555555"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:divider="@null"
+            android:dividerHeight="0dp"/>
     </LinearLayout>
 
 
