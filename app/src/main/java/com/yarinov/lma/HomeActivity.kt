@@ -26,6 +26,7 @@ import com.yarinov.lma.Meeting.CreateGroupActivity
 import com.yarinov.lma.Meeting.SetupMeetingActivity
 import com.yarinov.lma.Notification.NotificationAdapter
 import com.yarinov.lma.Notification.customNotification
+import com.yarinov.lma.User.FriendsActivity
 import de.hdodenhof.circleimageview.CircleImageView
 import io.github.yavski.fabspeeddial.FabSpeedDial
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
@@ -109,7 +110,7 @@ class HomeActivity : AppCompatActivity() {
                     }
 
 
-                    //Get all the user notifications TODO Convert all this part to a function
+                    //Get all the user notifications
                     loadNotification(userId, myName)
 
                     //Disable loading animation and display the home layout
@@ -176,6 +177,11 @@ class HomeActivity : AppCompatActivity() {
 
     fun setupMeetingSectionOpen(view: View) {
         val intent = Intent(this, SetupMeetingActivity::class.java)
+        startActivity(intent)
+    }
+
+    fun friendsSectionOpen(view: View) {
+        val intent = Intent(this, FriendsActivity::class.java)
         startActivity(intent)
     }
 

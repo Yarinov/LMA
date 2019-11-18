@@ -201,6 +201,7 @@ class SetupMeetingActivity : AppCompatActivity() {
         intent.putExtra("thePlace", location)
         intent.putExtra("friendId", theFriendId)
         startActivity(intent)
+        finish()
     }
 
     override fun onBackPressed() {

@@ -1,5 +1,6 @@
 package com.yarinov.lma.Meeting
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -7,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.yarinov.lma.HomeActivity
 import com.yarinov.lma.R
 import java.util.*
 import kotlin.collections.HashMap
@@ -78,6 +80,8 @@ class MeetingSumActivity : AppCompatActivity() {
 
             currentUserNotificationsDb.setValue(sentMeetingData).addOnSuccessListener {
                 Toast.makeText(this, "MSG SENT!", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent)
                 finish()
             }
         }

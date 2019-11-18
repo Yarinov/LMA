@@ -71,11 +71,11 @@ class NotificationAdapter(
         if (notificationType.equals("sent")){
             holder.tvnotificationic!!.setImageResource(R.drawable.sent_ic)
         }else{
-            holder.tvnotificationic!!.setImageResource(R.drawable.received_id)
+            holder.tvnotificationic!!.setImageResource(R.drawable.received_ic)
         }
 
         //Get and set date and place
-        var whenWhere = notificationArrayList[position].date + " " + notificationArrayList[position].place
+        var whenWhere = notificationArrayList[position].date + " At " + notificationArrayList[position].place
         holder.tvwhenwhere!!.setText(whenWhere)
 
         return convertView

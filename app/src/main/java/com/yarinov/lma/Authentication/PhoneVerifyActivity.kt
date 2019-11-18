@@ -26,8 +26,6 @@ import com.google.firebase.storage.StorageReference
 import com.hbb20.CountryCodePicker
 import com.yarinov.lma.HomeActivity
 import com.yarinov.lma.R
-import com.yarinov.lma.User.UserFriend
-import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.HashMap
 
