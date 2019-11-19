@@ -1,4 +1,4 @@
-package com.yarinov.lma.Serializer;
+package com.yarinov.lma.CustomObject.Serializer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

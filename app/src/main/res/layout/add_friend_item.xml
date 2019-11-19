@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:textDirection="locale"
+    android:textAlignment="gravity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImageList"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_margin="10sp"
+            android:src="@drawable/profile_signup"
+            app:civ_border_color="@color/colorPrimaryDark"
+            app:civ_border_width="3dp" />
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8sp"
+            android:text="Name"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="25sp"
+            android:layout_weight="2"/>
+
+        <com.dd.processbutton.iml.ActionProcessButton
+            android:id="@+id/sendRequestButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="15dp"
+            android:text="+"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            custom:pb_colorComplete="@color/green_complete"
+            custom:pb_colorError="@color/red_error"
+            custom:pb_colorNormal="@color/colorPrimaryDark"
+            custom:pb_colorPressed="@color/colorPrimary"
+            custom:pb_colorProgress="@color/DarkYellow"
+            custom:pb_cornerRadius="20dp"
+            custom:pb_textComplete="Sent"
+            custom:pb_textError="Error"
+            android:layout_weight="1"/>
+
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="8sp"
+        android:layout_marginRight="8sp"
+        android:background="@color/Gray" />
+
+
+</LinearLayout>

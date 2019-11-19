@@ -15,9 +15,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".User.FriendsActivity"
+        <activity android:name=".User.AddFriendActivity"
+            android:theme="@style/CreateGroupTheme"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".User.FriendsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/CreateGroupTheme"/>
+            android:theme="@style/CreateGroupTheme" />
         <activity
             android:name=".Info.AboutActivity"
             android:screenOrientation="portrait"

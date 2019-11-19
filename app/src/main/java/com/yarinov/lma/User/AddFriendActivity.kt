@@ -1,6 +1,5 @@
 package com.yarinov.lma.User
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -11,35 +10,33 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.yarinov.lma.Meeting.ContactListAdapter
 import com.yarinov.lma.R
 
-class FriendsActivity : AppCompatActivity() {
+class AddFriendActivity : AppCompatActivity() {
 
-    private var friendsList: ListView? = null
-    private var contactListAdapter: ContactListAdapter? = null
-    private var userFriendIdArrayList: ArrayList<String> = ArrayList()
-    private var userFriendsObjectArrayList: ArrayList<User> = ArrayList()
+    private var usersList: ListView? = null
+    private var usersListAdapter: usersListAdapter? = null
+    private var usersIdArrayList: ArrayList<String> = ArrayList()
+    private var userFriendsIdArrayList: ArrayList<String> = ArrayList()
+    private var usersObjectArrayList: ArrayList<User> = ArrayList()
 
     var user: FirebaseUser? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_friends)
+        setContentView(R.layout.activity_add_friend)
 
-        friendsList = findViewById(R.id.myFriendsList)
+        usersList = findViewById(R.id.usersListView)
 
         user = FirebaseAuth.getInstance().currentUser
 
-        loadUserFriendsData()
-
+        loadUsers()
 
     }
 
-    private fun loadUserFriendsData() {
+    private fun loadUsers() {
 
         var userId = user!!.uid
-
 
         val currentUserFriendRootDatabase =
             FirebaseDatabase.getInstance().getReference().child("Friends")
@@ -53,11 +50,11 @@ class FriendsActivity : AppCompatActivity() {
                 //Get all user friend
                 for (childDataSnapshot in dataSnapshot.children) {
                     val userFriendData = childDataSnapshot.key
-                    userFriendIdArrayList!!.add(userFriendData!!)
+                    userFriendsIdArrayList!!.add(userFriendData!!)
                     //contactListAdapter!!.notifyDataSetChanged()
                 }
 
-                loadContactsToAdapter()
+                removeFriendsFromUsers()
 
             }
 
@@ -68,30 +65,62 @@ class FriendsActivity : AppCompatActivity() {
             }
         }
         currentUserFriendRootDatabase.addValueEventListener(postListener)
-
     }
 
-    private fun loadContactsToAdapter() {
+    private fun removeFriendsFromUsers() {
 
-        for (userFriendId in userFriendIdArrayList!!) {
+        var currentUserId = user!!.uid
+
+        val currentUsersRootDatabase =
+            FirebaseDatabase.getInstance().getReference().child("Users")
+
+        //Set home activity according to the user details
+        val postListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // Get Post object and use the values to update the UI
+
+                //Get all user friend
+                for (childDataSnapshot in dataSnapshot.children) {
+                    val userId = childDataSnapshot.key
+                    if (!userId.equals(currentUserId) && !userFriendsIdArrayList.contains(userId))
+                        usersIdArrayList!!.add(userId!!)
+                    //contactListAdapter!!.notifyDataSetChanged()
+                }
+
+                 loadUsersToAdapter()
+
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Getting Post failed, log a message
+                // ...
+
+            }
+        }
+        currentUsersRootDatabase.addValueEventListener(postListener)
+    }
+
+    private fun loadUsersToAdapter() {
+
+        for (userId in usersIdArrayList!!) {
 
             var currentUserFriendRootDatabase =
                 FirebaseDatabase.getInstance().getReference().child("Users")
-                    .child(userFriendId)
+                    .child(userId)
 
             //Set home activity according to the user details
             val postListener = object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     // Get Post object and use the values to update the UI
-                    var userTemp = User(dataSnapshot.child("Name").value as String, userFriendId)
-                    userFriendsObjectArrayList!!.add(userTemp)
+                    var userTemp = User(dataSnapshot.child("Name").value as String, userId)
+                    usersObjectArrayList!!.add(userTemp)
 
                     //Set the contact list adapter with all the data
-                    contactListAdapter =
-                        ContactListAdapter(this@FriendsActivity, userFriendsObjectArrayList)
-                    friendsList!!.adapter = contactListAdapter
+                    usersListAdapter =
+                        usersListAdapter(this@AddFriendActivity, usersObjectArrayList)
+                    usersList!!.adapter = usersListAdapter
 
-                    contactListAdapter!!.notifyDataSetChanged()
+                    usersListAdapter!!.notifyDataSetChanged()
 
                 }
 
@@ -105,11 +134,7 @@ class FriendsActivity : AppCompatActivity() {
 
 
         }
-
     }
 
-    fun addFriendSection(view: View) {
-        var toAddFriendActivity = Intent(this, AddFriendActivity::class.java)
-        startActivity(toAddFriendActivity)
-    }
+
 }
