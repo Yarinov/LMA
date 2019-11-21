@@ -1,9 +1,13 @@
-package com.yarinov.lma.User
+package com.yarinov.lma.User.Friends
 
-import androidx.appcompat.app.AppCompatActivity
+
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.ListView
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
@@ -11,32 +15,58 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.yarinov.lma.R
+import com.yarinov.lma.User.AddFriendListAdapter
+import com.yarinov.lma.User.FriendsListAdapter
+import com.yarinov.lma.User.User
 
-class AddFriendActivity : AppCompatActivity() {
-
-    private var usersList: ListView? = null
-    private var usersListAdapter: usersListAdapter? = null
-    private var usersIdArrayList: ArrayList<String> = ArrayList()
-    private var userFriendsIdArrayList: ArrayList<String> = ArrayList()
-    private var usersObjectArrayList: ArrayList<User> = ArrayList()
+/**
+ * A simple [Fragment] subclass.
+ */
+class AddFriendFragment : Fragment() {
 
     var user: FirebaseUser? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_friend)
+    private var friendsList: RecyclerView? = null
+    private var userFriendIdArrayList: ArrayList<String> = ArrayList()
+    private var usersIdArrayList: ArrayList<String> = ArrayList()
+    private var userNonFriendsObjectArrayList: ArrayList<User> = ArrayList()
+    private var friendsListAdapter: AddFriendListAdapter? = null
 
-        usersList = findViewById(R.id.usersListView)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_add_friend, container, false)
 
-        user = FirebaseAuth.getInstance().currentUser
+        friendsList = view.findViewById(R.id.myFriendsList)
 
-        loadUsers()
+        userNonFriendsObjectArrayList = ArrayList()
 
+        friendsListAdapter =
+            AddFriendListAdapter(container!!.context, userNonFriendsObjectArrayList)
+
+        friendsList!!.setHasFixedSize(true)
+        friendsList!!.layoutManager = LinearLayoutManager(container.context)
+        friendsList!!.adapter = friendsListAdapter
+
+        // Inflate the layout for this fragment
+        return view
     }
 
-    private fun loadUsers() {
+    override fun onStart() {
+        super.onStart()
 
+        userFriendIdArrayList.clear()
+
+        loadUserFriends()
+    }
+
+    private fun loadUserFriends() {
+
+        user = FirebaseAuth.getInstance().currentUser
         var userId = user!!.uid
+
+        userFriendIdArrayList.clear()
 
         val currentUserFriendRootDatabase =
             FirebaseDatabase.getInstance().getReference().child("Friends")
@@ -50,8 +80,7 @@ class AddFriendActivity : AppCompatActivity() {
                 //Get all user friend
                 for (childDataSnapshot in dataSnapshot.children) {
                     val userFriendData = childDataSnapshot.key
-                    userFriendsIdArrayList!!.add(userFriendData!!)
-                    //contactListAdapter!!.notifyDataSetChanged()
+                    userFriendIdArrayList!!.add(userFriendData!!)
                 }
 
                 removeFriendsFromUsers()
@@ -71,6 +100,8 @@ class AddFriendActivity : AppCompatActivity() {
 
         var currentUserId = user!!.uid
 
+        usersIdArrayList.clear()
+
         val currentUsersRootDatabase =
             FirebaseDatabase.getInstance().getReference().child("Users")
 
@@ -82,12 +113,12 @@ class AddFriendActivity : AppCompatActivity() {
                 //Get all user friend
                 for (childDataSnapshot in dataSnapshot.children) {
                     val userId = childDataSnapshot.key
-                    if (!userId.equals(currentUserId) && !userFriendsIdArrayList.contains(userId))
+                    if (!userId.equals(currentUserId) && !userFriendIdArrayList.contains(userId))
                         usersIdArrayList!!.add(userId!!)
                     //contactListAdapter!!.notifyDataSetChanged()
                 }
 
-                 loadUsersToAdapter()
+                loadUsersToAdapter()
 
             }
 
@@ -102,6 +133,8 @@ class AddFriendActivity : AppCompatActivity() {
 
     private fun loadUsersToAdapter() {
 
+        userNonFriendsObjectArrayList.clear()
+
         for (userId in usersIdArrayList!!) {
 
             var currentUserFriendRootDatabase =
@@ -113,14 +146,12 @@ class AddFriendActivity : AppCompatActivity() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     // Get Post object and use the values to update the UI
                     var userTemp = User(dataSnapshot.child("Name").value as String, userId)
-                    usersObjectArrayList!!.add(userTemp)
+                    userNonFriendsObjectArrayList!!.add(userTemp)
 
                     //Set the contact list adapter with all the data
-                    usersListAdapter =
-                        usersListAdapter(this@AddFriendActivity, usersObjectArrayList)
-                    usersList!!.adapter = usersListAdapter
 
-                    usersListAdapter!!.notifyDataSetChanged()
+                    System.out.println(userNonFriendsObjectArrayList)
+                    friendsListAdapter!!.notifyDataSetChanged()
 
                 }
 
@@ -135,6 +166,5 @@ class AddFriendActivity : AppCompatActivity() {
 
         }
     }
-
 
 }

@@ -26,7 +26,9 @@ class User {
         this.userId = userId
     }
 
-
+    override fun toString(): String {
+        return "User(userName=$userName, userId=$userId)"
+    }
 
 
 }

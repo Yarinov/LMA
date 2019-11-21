@@ -125,7 +125,9 @@ class SetupMeetingActivity : AppCompatActivity() {
                 //Get all user friend
                 for (childDataSnapshot in dataSnapshot.children) {
                     val userFriendData = childDataSnapshot.key
-                    userFriendIdArrayList!!.add(userFriendData!!)
+
+                    if (childDataSnapshot.value as Boolean)
+                        userFriendIdArrayList!!.add(userFriendData!!)
                     //contactListAdapter!!.notifyDataSetChanged()
                 }
 

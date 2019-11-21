@@ -9,5 +9,7 @@
     <color name="Brown">#3B2318</color>
     <color name="LightBrown">#CC9C75</color>
     <color name="DarkYellow">#9AEEFF41</color>
+    <color name="DarkRed">#9AFF4141</color>
     <color name="Gray">#E0D5D5</color>
+    <color name="textTabLight"></color>
 </resources>

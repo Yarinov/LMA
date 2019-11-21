@@ -55,7 +55,7 @@ class ContactListAdapter(
                 constraint = constraint.toString().toLowerCase()
                 for (i in 0 until contactModelArrayList.size) {
                     val dataNames = contactModelArrayList.get(i).getNames()
-                    if (dataNames.toLowerCase().startsWith(constraint.toString())) {
+                    if (dataNames.toLowerCase().contains(constraint.toString())) {
                         FilteredArrayNames.add(contactModelArrayList.get(i))
                     }
                 }
