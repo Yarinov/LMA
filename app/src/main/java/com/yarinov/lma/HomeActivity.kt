@@ -10,6 +10,8 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.internal.NavigationMenu
 import com.google.firebase.auth.FirebaseAuth
@@ -39,7 +41,7 @@ class HomeActivity : AppCompatActivity() {
     var userNameTitle: TextView? = null
     var profilePic: CircleImageView? = null
     var noActivityText: TextView? = null
-    var userNotificationList: ListView? = null
+    var userNotificationList: RecyclerView? = null
 
     var user: FirebaseUser? = null
     var post: String? = null
@@ -147,7 +149,7 @@ class HomeActivity : AppCompatActivity() {
                 when (menuItem.title) {
 
                     "Logout" -> {
-                        showPopup()
+                        showLogoutPopup()
                     }
 
                     "About" -> {
@@ -162,6 +164,12 @@ class HomeActivity : AppCompatActivity() {
         })
 
 
+        notificationArrayList = ArrayList()
+        notificationListAdapter = NotificationAdapter(this, notificationArrayList)
+
+        userNotificationList!!.setHasFixedSize(true)
+        userNotificationList!!.layoutManager = LinearLayoutManager(this)
+        userNotificationList!!.adapter = notificationListAdapter
     }
 
 
@@ -196,7 +204,7 @@ class HomeActivity : AppCompatActivity() {
         startActivity(startMain)
     }
 
-    private fun showPopup() {
+    private fun showLogoutPopup() {
         val alert = AlertDialog.Builder(this@HomeActivity)
         alert.setMessage("Are you sure?")
             .setPositiveButton("Logout", DialogInterface.OnClickListener { dialog, which ->
@@ -235,6 +243,7 @@ class HomeActivity : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // Get Post object and use the values to update the UI
 
+                notificationArrayList.clear()
                 //Get all user friend
                 for (childDataSnapshot in dataSnapshot.children) {
                     val notificationType = childDataSnapshot.child("type").value
@@ -267,11 +276,10 @@ class HomeActivity : AppCompatActivity() {
                                 )
 
                                 notificationArrayList.add(notificationObject)
-                                notificationListAdapter = NotificationAdapter(this@HomeActivity, notificationArrayList)
-                                userNotificationList!!.adapter = notificationListAdapter
                                 userNotificationList!!.visibility = View.VISIBLE
                                 noActivityText!!.visibility = View.GONE
 
+                                notificationListAdapter!!.notifyDataSetChanged()
 
                             }
 

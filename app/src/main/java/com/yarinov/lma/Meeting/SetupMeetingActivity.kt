@@ -1,5 +1,6 @@
 package com.yarinov.lma.Meeting
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -8,6 +9,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.*
 import android.widget.CalendarView.OnDateChangeListener
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -84,8 +86,6 @@ class SetupMeetingActivity : AppCompatActivity() {
 
 
         contactList!!.setOnItemClickListener { parent, view, position, id ->
-
-            Toast.makeText(this, "Clicked item :" + " " + position, Toast.LENGTH_SHORT).show()
 
             theFriendName = userFriendsObjectArrayList!![position].getNames()
             theFriendId = userFriendsObjectArrayList!![position].getId()
@@ -207,8 +207,17 @@ class SetupMeetingActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        val intent = Intent(this, HomeActivity::class.java)
-        startActivity(intent)
+       // super.onBackPressed()
+
+        val alert = AlertDialog.Builder(this@SetupMeetingActivity)
+        alert.setMessage("Going back will delete any progress done, Are you sure?")
+            .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
+                val intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent)
+            }).setNegativeButton("Cancel", null)
+
+        val alert1 = alert.create()
+        alert1.show()
+
     }
 }

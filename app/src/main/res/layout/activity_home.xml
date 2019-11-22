@@ -184,7 +184,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:onClick="createGroupSectionOpen"
-                        android:text="Create\nNew Group" />
+                        android:text="Group\nMeeting" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -265,16 +265,13 @@
             android:visibility="gone"
             android:id="@+id/noActivityText"/>
 
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/userNotificationList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="15sp"
-            android:layout_marginTop="2sp"
-            android:background="#00555555"
-            android:visibility="gone"
-            android:divider="@null"
-            android:dividerHeight="0dp"/>
+            android:layout_marginTop="2sp" />
+
     </LinearLayout>
 
 

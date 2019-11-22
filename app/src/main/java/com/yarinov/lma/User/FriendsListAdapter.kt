@@ -31,6 +31,7 @@ class FriendsListAdapter(private val context: Context, private val usersList: Li
         val userName = usersList[position].userName
 
         holder.tvname!!.setText(userName)
+        holder.tvname!!.isSelected = true
 
         //Get user pic (if exits)
         val storage = FirebaseStorage.getInstance()
