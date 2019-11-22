@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/create_group_bg"
     android:orientation="vertical"
@@ -145,18 +146,43 @@
                 android:textColor="@color/colorAccent"
                 android:textSize="33dp" />
 
-            <Button
-                android:id="@+id/button4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Choose From Maps" />
+            <com.dd.processbutton.iml.ActionProcessButton
+                android:id="@+id/getLoctionFromMapButton"
+                android:layout_width="wrap_content"
+                android:layout_height="50sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="25sp"
+                android:text="Choose Location From Map"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                custom:pb_colorComplete="@color/green_complete"
+                custom:pb_colorError="@color/red_error"
+                custom:pb_colorNormal="@color/colorPrimaryDark"
+                custom:pb_colorPressed="@color/colorPrimary"
+                custom:pb_colorProgress="@color/DarkYellow"
+                custom:pb_cornerRadius="20dp"
+                custom:pb_textComplete="Sent"
+                custom:pb_textError="Error" />
 
-            <Button
-                android:id="@+id/button5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <com.dd.processbutton.iml.ActionProcessButton
+                android:id="@+id/toSumMeetingButton"
+                android:layout_width="wrap_content"
+                android:layout_height="50sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="30sp"
                 android:onClick="openMeetingSummry"
-                android:text="Next" />
+                android:text="Finish"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                custom:pb_colorComplete="@color/green_complete"
+                custom:pb_colorError="@color/red_error"
+                custom:pb_colorNormal="@color/colorPrimaryDark"
+                custom:pb_colorPressed="@color/colorPrimary"
+                custom:pb_colorProgress="@color/DarkYellow"
+                custom:pb_cornerRadius="20dp"
+                custom:pb_textComplete="Sent"
+                custom:pb_textError="Error" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -204,12 +230,24 @@
                     android:layout_height="wrap_content" />
             </androidx.cardview.widget.CardView>
 
-            <Button
-                android:id="@+id/toWhereButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <com.dd.processbutton.iml.ActionProcessButton
+                android:id="@+id/sendRequestButton"
+                android:layout_width="133dp"
+                android:layout_height="50sp"
+                android:layout_gravity="center"
                 android:onClick="toThirdStep"
-                android:text="Button" />
+                android:text="Next"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                custom:pb_colorComplete="@color/green_complete"
+                custom:pb_colorError="@color/red_error"
+                custom:pb_colorNormal="@color/colorPrimaryDark"
+                custom:pb_colorPressed="@color/colorPrimary"
+                custom:pb_colorProgress="@color/DarkYellow"
+                custom:pb_cornerRadius="20dp"
+                custom:pb_textComplete="Sent"
+                custom:pb_textError="Error" />
+
         </LinearLayout>
 
     </LinearLayout>
