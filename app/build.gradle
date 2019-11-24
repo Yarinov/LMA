@@ -61,5 +61,6 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.10.0'
     kapt 'com.github.bumptech.glide:compiler:4.10.0'
     implementation 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
+    implementation 'com.github.PuffoCyano:Range-Time-Picker-Dialog:v1.8'
 
 }

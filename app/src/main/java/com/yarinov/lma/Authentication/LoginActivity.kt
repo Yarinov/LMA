@@ -39,12 +39,6 @@ class LoginActivity : AppCompatActivity() {
 
         mAuth = FirebaseAuth.getInstance()
 
-        var loginButton = findViewById<Button>(R.id.loginButton)
-        var signupButton = findViewById<Button>(R.id.signupButton)
-
-        var emailInput = findViewById<EditText>(R.id.input_email)
-        var passwordInput = findViewById<EditText>(R.id.input_password)
-
         loginLogo = findViewById<ImageView>(R.id.logoLogin)
 
 
@@ -72,19 +66,6 @@ class LoginActivity : AppCompatActivity() {
         val intent = Intent(this, PhoneVerifyActivity::class.java)
         intent.putExtra("VerifyType", "Login")
         startActivity(intent)
-
-//        loginFlag = true
-//        loginButton.visibility = View.GONE
-//        signupButton.visibility = View.GONE
-//        loginLogo!!.visibility = View.GONE
-//
-//        var loginPlat = findViewById<LinearLayout>(R.id.loginPlat)
-//        loginPlat.visibility = View.VISIBLE
-//        var loginAnimation = AnimationUtils.loadAnimation(this, R.anim.login_ani)
-//        loginAnimation.duration = 700
-//        loginPlat.animation = loginAnimation
-//        loginPlat.animate()
-//        loginAnimation.start()
 
     }
 

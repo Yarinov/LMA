@@ -2,9 +2,12 @@ package com.yarinov.lma.User.Friends
 
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +29,8 @@ class AddFriendFragment : Fragment() {
 
     var user: FirebaseUser? = null
 
+    private var userSearchInput: EditText? = null
+
     private var friendsList: RecyclerView? = null
     private var userFriendIdArrayList: ArrayList<String> = ArrayList()
     private var usersIdArrayList: ArrayList<String> = ArrayList()
@@ -39,6 +44,7 @@ class AddFriendFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_add_friend, container, false)
 
         friendsList = view.findViewById(R.id.myFriendsList)
+        userSearchInput = view.findViewById(R.id.userSearchInput)
 
         userNonFriendsObjectArrayList = ArrayList()
 
@@ -48,6 +54,19 @@ class AddFriendFragment : Fragment() {
         friendsList!!.setHasFixedSize(true)
         friendsList!!.layoutManager = LinearLayoutManager(container.context)
         friendsList!!.adapter = friendsListAdapter
+
+        //Filter contact list
+        userSearchInput!!.addTextChangedListener(object : TextWatcher {
+
+            override fun onTextChanged(cs: CharSequence, arg1: Int, arg2: Int, arg3: Int) {
+                // When user changed the Text
+                this@AddFriendFragment.friendsListAdapter!!.getFilter().filter(cs)
+            }
+
+            override fun beforeTextChanged(arg0: CharSequence, arg1: Int, arg2: Int, arg3: Int) {}
+
+            override fun afterTextChanged(arg0: Editable) {}
+        })
 
         // Inflate the layout for this fragment
         return view

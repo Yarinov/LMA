@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -92,6 +91,7 @@ class HomeActivity : AppCompatActivity() {
                     // Get Post object and use the values to update the UI
                     var myName = dataSnapshot.child("Name").getValue()
                     userNameTitle!!.setText("Hello " + myName + "!")
+                    userNameTitle!!.isSelected = true
 
                     //If the user have a profile pic
                     if (dataSnapshot.child("imgUri").getValue()!!.equals("true")) {
@@ -246,50 +246,64 @@ class HomeActivity : AppCompatActivity() {
                 notificationArrayList.clear()
                 //Get all user friend
                 for (childDataSnapshot in dataSnapshot.children) {
+
+                    var notificationId = childDataSnapshot.key
                     val notificationType = childDataSnapshot.child("type").value
 
                     var friendId = ""
 
                     if (notificationType!!.equals("sent")) {
                         friendId = childDataSnapshot.child("to").value as String
-                    }else{
+                    } else {
                         friendId = childDataSnapshot.child("from").value as String
                     }
-                        var date = childDataSnapshot.child("date").value
-                        var place = childDataSnapshot.child("place").value
+                    var date = childDataSnapshot.child("date").value
+                    var place = childDataSnapshot.child("place").value
+                    var time = childDataSnapshot.child("time").value
+                    println(time)
+                    var status = childDataSnapshot.child("status").value
 
-                        //Get Friend Name
-                        val currentUserFriendDatabase =
-                            FirebaseDatabase.getInstance().getReference().child("Users")
-                                .child(friendId).child("Name")
 
-                        val getUserNameListener = object : ValueEventListener {
+                    //Get Friend Name
+                    val currentUserFriendDatabase =
+                        FirebaseDatabase.getInstance().getReference().child("Users")
+                            .child(friendId).child("Name")
 
-                            override fun onDataChange(p0: DataSnapshot) {
-                                var toName = p0.value
+                    val getUserNameListener = object : ValueEventListener {
 
-                                var notificationObject = customNotification(
-                                    userId,
-                                    myName as String?, friendId,
-                                    toName as String?,
-                                    date as String?, place as String?, notificationType as String?
-                                )
+                        override fun onDataChange(p0: DataSnapshot) {
+                            var toName = p0.value
 
-                                notificationArrayList.add(notificationObject)
-                                userNotificationList!!.visibility = View.VISIBLE
-                                noActivityText!!.visibility = View.GONE
+                            var notificationObject = customNotification(
+                                notificationId,
+                                userId,
+                                myName as String?,
+                                friendId,
+                                toName as String?,
+                                date as String?,
+                                time as String?,
+                                place as String?,
+                                notificationType as String?,
+                                status as String?
+                            )
 
-                                notificationListAdapter!!.notifyDataSetChanged()
+                            System.out.println(notificationObject)
 
-                            }
+                            notificationArrayList.add(notificationObject)
+                            userNotificationList!!.visibility = View.VISIBLE
+                            noActivityText!!.visibility = View.GONE
 
-                            override fun onCancelled(p0: DatabaseError) {
-                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                            }
+                            notificationListAdapter!!.notifyDataSetChanged()
 
                         }
 
-                        currentUserFriendDatabase.addValueEventListener(getUserNameListener)
+                        override fun onCancelled(p0: DatabaseError) {
+                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        }
+
+                    }
+
+                    currentUserFriendDatabase.addValueEventListener(getUserNameListener)
                     //contactListAdapter!!.notifyDataSetChanged()
                 }
 

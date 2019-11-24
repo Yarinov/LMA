@@ -1,6 +1,6 @@
 package com.yarinov.lma.Meeting
 
-import android.content.DialogInterface
+import android.app.FragmentManager
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -17,20 +17,26 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+
+import com.mcsoft.timerangepickerdialog.RangeTimePickerDialog
+
 import com.yarinov.lma.HomeActivity
 import com.yarinov.lma.R
 import com.yarinov.lma.User.User
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
-class SetupMeetingActivity : AppCompatActivity() {
+class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelectedTime {
 
     private var contactList: ListView? = null
     private var contactListAdapter: ContactListAdapter? = null
     private var userFriendsObjectArrayList: ArrayList<User> = ArrayList()
     private var userFriendIdArrayList: ArrayList<String>? = null
 
-    private var screenTitle: TextView? = null
     private var dateInput: EditText? = null
+    private var timeInput: EditText? = null
     private var contactSearchInput: EditText? = null
     private var locationInput: EditText? = null
 
@@ -45,8 +51,10 @@ class SetupMeetingActivity : AppCompatActivity() {
     private var theFriendId: String? = null
     private var theDate: String? = null
     private var thePlace: String? = null
+    private var theTime: String? = null
 
     var user: FirebaseUser? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +63,7 @@ class SetupMeetingActivity : AppCompatActivity() {
         user = FirebaseAuth.getInstance().currentUser
 
         dateInput = findViewById(R.id.dateInput)
+        timeInput = findViewById(R.id.timeInput)
         contactSearchInput = findViewById(R.id.contactSearchInput)
         locationInput = findViewById(R.id.locationInput)
 
@@ -185,8 +194,24 @@ class SetupMeetingActivity : AppCompatActivity() {
 
 
     fun toThirdStep(view: View) {
-        secondStepLayout!!.visibility = View.GONE
-        thirdStepLayout!!.visibility = View.VISIBLE
+
+        var date = dateInput!!.text
+
+        val inputDateFormatter = SimpleDateFormat("dd/MM/yyyy").parse(date.toString())
+
+        val currentDate: Date = Calendar.getInstance().getTime()
+
+
+
+        if (date.isNullOrBlank() || theTime.isNullOrBlank()) {
+            Toast.makeText(this, "Invalid Date/Time", Toast.LENGTH_SHORT).show()
+            return
+        } else if (inputDateFormatter.compareTo(currentDate) < 0) {
+            Toast.makeText(this, "You can't go back in time.", Toast.LENGTH_SHORT).show()
+        } else {
+            secondStepLayout!!.visibility = View.GONE
+            thirdStepLayout!!.visibility = View.VISIBLE
+        }
     }
 
     fun openMeetingSummry(view: View) {
@@ -202,22 +227,48 @@ class SetupMeetingActivity : AppCompatActivity() {
         intent.putExtra("theDate", theDate)
         intent.putExtra("thePlace", location)
         intent.putExtra("friendId", theFriendId)
+        intent.putExtra("theTime", theTime)
         startActivity(intent)
         finish()
     }
 
     override fun onBackPressed() {
-       // super.onBackPressed()
+        // super.onBackPressed()
 
         val alert = AlertDialog.Builder(this@SetupMeetingActivity)
         alert.setMessage("Going back will delete any progress done, Are you sure?")
-            .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
+            .setPositiveButton("Yes") { dialog, which ->
                 val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
-            }).setNegativeButton("Cancel", null)
+            }.setNegativeButton("Cancel", null)
 
         val alert1 = alert.create()
         alert1.show()
 
     }
+
+    fun selectTime(view: View) {
+        val selectTimeRangeDialog = RangeTimePickerDialog()
+        selectTimeRangeDialog.newInstance()
+        selectTimeRangeDialog.setRadiusDialog(20) // Set radius of dialog (default is 50)
+
+        selectTimeRangeDialog.setIs24HourView(true) // Indicates if the format should be 24 hours
+        selectTimeRangeDialog.setColorTextButton(R.color.colorPrimary)
+        selectTimeRangeDialog.setColorTabSelected(R.color.colorPrimary)
+        selectTimeRangeDialog.setColorBackgroundTimePickerHeader(R.color.colorPrimaryDark)
+        selectTimeRangeDialog.setColorBackgroundHeader(R.color.colorPrimaryDark) // Set Color of Background header dialog
+
+        val fragmentManager: FragmentManager = fragmentManager
+        selectTimeRangeDialog.show(fragmentManager, "")
+    }
+
+    override fun onSelectedTime(hourStart: Int, minuteStart: Int, hourEnd: Int, minuteEnd: Int) {
+       theTime = hourStart.toString()  + ":" + minuteStart + " - " + hourEnd + ":" + minuteEnd
+
+        timeInput!!.setText(theTime)
+
+
+    }
+
+
 }

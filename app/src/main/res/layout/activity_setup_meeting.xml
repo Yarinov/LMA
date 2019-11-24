@@ -179,7 +179,6 @@
                 custom:pb_colorNormal="@color/colorPrimaryDark"
                 custom:pb_colorPressed="@color/colorPrimary"
                 custom:pb_colorProgress="@color/DarkYellow"
-                custom:pb_cornerRadius="20dp"
                 custom:pb_textComplete="Sent"
                 custom:pb_textError="Error" />
 
@@ -219,6 +218,23 @@
                 android:textSize="33dp" />
 
 
+            <EditText
+                android:id="@+id/timeInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10sp"
+                android:layout_marginTop="10sp"
+                android:layout_marginRight="10sp"
+                android:ems="10"
+                android:enabled="true"
+                android:focusable="false"
+                android:gravity="center"
+                android:hint="HH:MM - HH:MM"
+                android:inputType="date"
+                android:onClick="selectTime"
+                android:textColor="@color/colorAccent"
+                android:textSize="33dp" />
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -228,13 +244,15 @@
                     android:id="@+id/calendarInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
             </androidx.cardview.widget.CardView>
+
 
             <com.dd.processbutton.iml.ActionProcessButton
                 android:id="@+id/sendRequestButton"
                 android:layout_width="133dp"
                 android:layout_height="50sp"
-                android:layout_gravity="center"
+                android:layout_gravity="bottom|center"
                 android:onClick="toThirdStep"
                 android:text="Next"
                 android:textColor="@android:color/white"
@@ -244,7 +262,6 @@
                 custom:pb_colorNormal="@color/colorPrimaryDark"
                 custom:pb_colorPressed="@color/colorPrimary"
                 custom:pb_colorProgress="@color/DarkYellow"
-                custom:pb_cornerRadius="20dp"
                 custom:pb_textComplete="Sent"
                 custom:pb_textError="Error" />
 
