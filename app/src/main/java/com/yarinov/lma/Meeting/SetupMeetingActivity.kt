@@ -7,19 +7,22 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View
-import android.widget.*
+import android.widget.CalendarView
 import android.widget.CalendarView.OnDateChangeListener
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-
 import com.mcsoft.timerangepickerdialog.RangeTimePickerDialog
-
 import com.yarinov.lma.HomeActivity
 import com.yarinov.lma.R
 import com.yarinov.lma.User.User
@@ -30,7 +33,7 @@ import kotlin.collections.ArrayList
 
 class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelectedTime {
 
-    private var contactList: ListView? = null
+    private var contactList: RecyclerView? = null
     private var contactListAdapter: ContactListAdapter? = null
     private var userFriendsObjectArrayList: ArrayList<User> = ArrayList()
     private var userFriendIdArrayList: ArrayList<String>? = null
@@ -75,8 +78,17 @@ class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelecte
         thirdStepLayout = findViewById(R.id.thirdStepLayout)
 
         userFriendIdArrayList = ArrayList()
-        contactList = findViewById<ListView>(R.id.contactList)
+        contactList = findViewById(R.id.contactList)
 
+
+        userFriendsObjectArrayList = ArrayList()
+
+        contactListAdapter =
+            ContactListAdapter(this, userFriendsObjectArrayList)
+
+        contactList!!.setHasFixedSize(true)
+        contactList!!.layoutManager = LinearLayoutManager(this)
+        contactList!!.adapter = contactListAdapter
 
         loadUserFriendsData()
 
@@ -94,14 +106,16 @@ class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelecte
         })
 
 
-        contactList!!.setOnItemClickListener { parent, view, position, id ->
 
-            theFriendName = userFriendsObjectArrayList!![position].getNames()
-            theFriendId = userFriendsObjectArrayList!![position].getId()
+        contactList!!.addOnItemClickListener(object: OnItemClickListener {
+            override fun onItemClicked(position: Int, view: View) {
+                theFriendName = userFriendsObjectArrayList!![position].getNames()
+                theFriendId = userFriendsObjectArrayList!![position].getId()
 
-            firstStepLayout!!.visibility = View.GONE
-            secondStepLayout!!.visibility = View.VISIBLE
-        }
+                firstStepLayout!!.visibility = View.GONE
+                secondStepLayout!!.visibility = View.VISIBLE
+            }
+        })
 
         //Setup the date
         var calendar = findViewById<CalendarView>(R.id.calendarInput)
@@ -115,6 +129,30 @@ class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelecte
 
         thePlace = "Somewhere over the rainbow"
 
+    }
+
+
+    //RecyclerView interface for item click
+    interface OnItemClickListener {
+        fun onItemClicked(position: Int, view: View)
+    }
+
+    fun RecyclerView.addOnItemClickListener(onClickListener: OnItemClickListener) {
+        this.addOnChildAttachStateChangeListener(object: RecyclerView.OnChildAttachStateChangeListener {
+
+            override fun onChildViewDetachedFromWindow(view: View) {
+                view?.setOnClickListener(null)
+            }
+
+            override fun onChildViewAttachedToWindow(view: View) {
+                view?.setOnClickListener {
+                    val holder = getChildViewHolder(view)
+                    onClickListener.onItemClicked(holder.adapterPosition, view)
+                }
+            }
+
+
+        })
     }
 
     private fun loadUserFriendsData() {
@@ -131,6 +169,8 @@ class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelecte
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // Get Post object and use the values to update the UI
 
+                userFriendIdArrayList!!.clear()
+
                 //Get all user friend
                 for (childDataSnapshot in dataSnapshot.children) {
                     val userFriendData = childDataSnapshot.key
@@ -142,8 +182,6 @@ class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelecte
 
                 loadContactsToAdapter()
 
-                loadingLayout!!.visibility = View.GONE
-                meetingLayout!!.visibility = View.VISIBLE
 
             }
 
@@ -159,6 +197,8 @@ class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelecte
 
     private fun loadContactsToAdapter() {
 
+        userFriendsObjectArrayList.clear()
+
         for (userFriendId in userFriendIdArrayList!!) {
 
             var currentUserFriendRootDatabase =
@@ -173,9 +213,9 @@ class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelecte
                     userFriendsObjectArrayList!!.add(userTemp)
 
                     //Set the contact list adapter with all the data
-                    contactListAdapter =
-                        ContactListAdapter(this@SetupMeetingActivity, userFriendsObjectArrayList)
-                    contactList!!.adapter = contactListAdapter
+                    contactListAdapter!!.notifyDataSetChanged()
+                    loadingLayout!!.visibility = View.GONE
+                    meetingLayout!!.visibility = View.VISIBLE
 
                 }
 

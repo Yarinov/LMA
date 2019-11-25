@@ -23,7 +23,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.yarinov.lma.Authentication.LoginActivity
 import com.yarinov.lma.Glide.GlideApp
 import com.yarinov.lma.Info.AboutActivity
-import com.yarinov.lma.Meeting.CreateGroupActivity
+import com.yarinov.lma.Group.CreateGroupActivity
 import com.yarinov.lma.Meeting.SetupMeetingActivity
 import com.yarinov.lma.Notification.NotificationAdapter
 import com.yarinov.lma.Notification.customNotification
