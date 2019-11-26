@@ -37,6 +37,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="SelectFriendsTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/LightBrown</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

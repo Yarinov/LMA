@@ -29,6 +29,8 @@ class AddFriendListAdapter(private val context: Context, private var usersList: 
 
     var usersListBackup = usersList
 
+    var filteredArrayNames = ArrayList<User>()
+
     override fun getFilter(): Filter {
 
         return object : Filter() {
@@ -41,26 +43,39 @@ class AddFriendListAdapter(private val context: Context, private var usersList: 
 
             override fun performFiltering(constraint: CharSequence): FilterResults {
 
-                //Reset the contact list every time to get the result from the total contact
                 usersList = usersListBackup
 
                 var constraint = constraint
-
-                val results = FilterResults()
-                val FilteredArrayNames = ArrayList<User>()
-
-                // perform your search here using the searchConstraint String.
-
                 constraint = constraint.toString().toLowerCase()
-                for (i in 0 until usersList.size) {
-                    val dataNames = usersList.get(i).getNames()
-                    if (dataNames.toLowerCase().contains(constraint.toString())) {
-                        FilteredArrayNames.add(usersList.get(i))
+
+
+                //Reset the contact list every time to get the result from the total contact
+                if (usersList.isEmpty()) {
+                    Toast.makeText(context, "404 User", Toast.LENGTH_SHORT).show()
+
+                } else {
+                    filteredArrayNames.clear()
+
+                    if (constraint.toString().isEmpty()) {
+                        filteredArrayNames.addAll(usersList)
+                    } else {
+                        filteredArrayNames = ArrayList()
+
+
+                        for (i in usersList.indices) {
+                            val dataNames = usersList[i].userName
+                            if (dataNames!!.toLowerCase().contains(constraint.toString())) {
+                                filteredArrayNames.add(usersList[i])
+                            }
+                        }
                     }
                 }
 
-                results.count = FilteredArrayNames.size
-                results.values = FilteredArrayNames
+
+                val results = FilterResults()
+
+                results.count = filteredArrayNames.size
+                results.values = filteredArrayNames
 
                 return results
             }

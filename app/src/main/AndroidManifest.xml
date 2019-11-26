@@ -15,11 +15,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Group.SelectFriendsToGroup"></activity>
-        <activity
-            android:name=".User.AddFriendActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/CreateGroupTheme" />
+        <activity android:name=".Group.SelectFriendsToGroup"
+            android:theme="@style/SelectFriendsTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".User.FriendsActivity"
             android:screenOrientation="portrait"
@@ -39,7 +37,6 @@
             android:name=".Meeting.SetupMeetingActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CreateGroupTheme" />
-        <activity android:name=".Meeting.ChooseFriendActivity" />
         <activity
             android:name=".Group.CreateGroupActivity"
             android:screenOrientation="portrait"

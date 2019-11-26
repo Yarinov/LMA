@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,6 +36,8 @@ class SelectFriendsToGroup : AppCompatActivity() {
     private var selectedFriendsArrayList: ArrayList<MultiSelectUser> = ArrayList()
     private var friendsListAdapter: MultiSelectRecyclerAdapter? = null
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_friends_to_group)
@@ -46,10 +49,10 @@ class SelectFriendsToGroup : AppCompatActivity() {
         selectFriendLayout = findViewById(R.id.selectFriendLayout)
 
 
-        userFriendsObjectArrayList = try {
-            val extras = intent.extras
-            (extras!!.getSerializable("selectedFriends") as ArrayList<MultiSelectUser>?)!!
+        val extras = intent.extras
 
+        userFriendsObjectArrayList = try {
+            (extras!!.getSerializable("selectedFriends") as ArrayList<MultiSelectUser>?)!!
 
         } catch (e: KotlinNullPointerException) {
             ArrayList()
@@ -81,7 +84,6 @@ class SelectFriendsToGroup : AppCompatActivity() {
                 }
 
 
-                println(friendsListAdapter!!.getItem(position))
             }
         })
 
@@ -190,6 +192,7 @@ class SelectFriendsToGroup : AppCompatActivity() {
     }
 
     fun passSelectedUsers(view: View) {
+
         val intent = Intent(this, CreateGroupActivity::class.java)
         intent.putExtra("selectedFriends", selectedFriendsArrayList)
         startActivity(intent)
@@ -218,5 +221,17 @@ class SelectFriendsToGroup : AppCompatActivity() {
 
 
         })
+    }
+
+    override fun onBackPressed() {
+        val alert = AlertDialog.Builder(this@SelectFriendsToGroup)
+        alert.setMessage("Going back will discard any selection done, Are you sure?")
+            .setPositiveButton("Yes") { dialog, which ->
+
+                finish()
+            }.setNegativeButton("Cancel", null)
+
+        val alert1 = alert.create()
+        alert1.show()
     }
 }

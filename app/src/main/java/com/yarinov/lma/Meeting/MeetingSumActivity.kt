@@ -56,16 +56,20 @@ class MeetingSumActivity : AppCompatActivity() {
 
     fun sendMeeting(view: View) {
 
+        var currentDate = Calendar.getInstance().getTime()
+
         var notificationId = UUID.randomUUID()
         var myId = FirebaseAuth.getInstance().currentUser!!.uid
 
         var receivedMeetingData = HashMap<String, String>()
+        receivedMeetingData.put("dateReceived", currentDate.toString())
         receivedMeetingData.put("from", myId)
         receivedMeetingData.put("date", date!!)
         receivedMeetingData.put("time", time!!)
         receivedMeetingData.put("place", place!!)
         receivedMeetingData.put("status", "pending")
         receivedMeetingData.put("type", "received")
+        receivedMeetingData.put("groupAffiliation", "none")
 
         val currentFriendNotificationsDb =
             FirebaseDatabase.getInstance().getReference().child("Users")
@@ -73,12 +77,15 @@ class MeetingSumActivity : AppCompatActivity() {
 
 
         var sentMeetingData = HashMap<String, String>()
+        sentMeetingData.put("dateReceived", currentDate.toString())
         sentMeetingData.put("to", friendId!!)
         sentMeetingData.put("date", date!!)
         sentMeetingData.put("time", time!!)
         sentMeetingData.put("place", place!!)
         sentMeetingData.put("status", "pending")
         sentMeetingData.put("type", "sent")
+        sentMeetingData.put("groupAffiliation", "none")
+
 
         val currentUserNotificationsDb =
             FirebaseDatabase.getInstance().getReference().child("Users")
