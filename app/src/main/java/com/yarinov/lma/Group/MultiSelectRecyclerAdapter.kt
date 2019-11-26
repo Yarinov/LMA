@@ -1,27 +1,26 @@
 package com.yarinov.lma.Group
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageException
 import com.yarinov.lma.CustomObject.ProgressGenerator.ProgressGenerator
-import com.yarinov.lma.Glide.GlideApp
 import com.yarinov.lma.R
-import de.hdodenhof.circleimageview.CircleImageView
+import java.util.*
+import kotlin.Comparator
+import kotlin.collections.ArrayList
 
 
-class MultiSelectRecyclerAdapter(private val context: Context, private var usersList: List<MultiSelectUser>) :
+class MultiSelectRecyclerAdapter(
+    private val context: Context,
+    private var usersList: List<MultiSelectUser>
+) :
     RecyclerView.Adapter<MultiSelectRecyclerAdapter.ViewHolder>(), Filterable,
     ProgressGenerator.OnCompleteListener {
 
-
+    var filteredArrayNames = ArrayList<MultiSelectUser>()
     var usersListBackup = usersList
 
     override fun getFilter(): Filter {
@@ -36,26 +35,39 @@ class MultiSelectRecyclerAdapter(private val context: Context, private var users
 
             override fun performFiltering(constraint: CharSequence): FilterResults {
 
-                //Reset the contact list every time to get the result from the total contact
                 usersList = usersListBackup
 
                 var constraint = constraint
-
-                val results = FilterResults()
-                val FilteredArrayNames = ArrayList<MultiSelectUser>()
-
-                // perform your search here using the searchConstraint String.
-
                 constraint = constraint.toString().toLowerCase()
-                for (i in 0 until usersList.size) {
-                    val dataNames = usersList.get(i).userName
-                    if (dataNames!!.toLowerCase().contains(constraint.toString())) {
-                        FilteredArrayNames.add(usersList.get(i))
+
+
+                //Reset the contact list every time to get the result from the total contact
+                if (usersList.isEmpty()) {
+                    Toast.makeText(context, "404 User", Toast.LENGTH_SHORT).show()
+
+                } else {
+                    filteredArrayNames.clear()
+
+                    if (constraint.toString().isEmpty()) {
+                        filteredArrayNames.addAll(usersList)
+                    } else {
+                        filteredArrayNames = ArrayList()
+
+
+                        for (i in usersList.indices) {
+                            val dataNames = usersList[i].userName
+                            if (dataNames!!.toLowerCase().contains(constraint.toString())) {
+                                filteredArrayNames.add(usersList[i])
+                            }
+                        }
                     }
                 }
 
-                results.count = FilteredArrayNames.size
-                results.values = FilteredArrayNames
+
+                val results = FilterResults()
+
+                results.count = filteredArrayNames.size
+                results.values = filteredArrayNames
 
                 return results
             }
@@ -69,7 +81,9 @@ class MultiSelectRecyclerAdapter(private val context: Context, private var users
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.multiselect_user_item, parent, false)
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.multiselect_user_item, parent, false)
+
 
         return ViewHolder(view)
 
@@ -82,9 +96,10 @@ class MultiSelectRecyclerAdapter(private val context: Context, private var users
         holder.tvname!!.isSelected = true
         holder.tvname!!.setText(userName)
 
-        if (usersList[position].isSelected){
+
+        if (usersList[position].isSelected) {
             holder.isSelectedButton!!.setImageResource(R.drawable.is_selected_true_ic)
-        }else{
+        } else {
             holder.isSelectedButton!!.setImageResource(R.drawable.is_selected_false_ic)
 
         }
@@ -96,7 +111,31 @@ class MultiSelectRecyclerAdapter(private val context: Context, private var users
         return usersList.size
     }
 
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
 
+    fun getItem(position: Int) : MultiSelectUser{
+        return usersList[position]
+    }
+
+    fun sortByAsc(){
+        val comparator: Comparator<MultiSelectUser> =
+            Comparator { object1: MultiSelectUser, object2: MultiSelectUser ->
+                object1.userName.compareTo(object2.userName, true)
+            }
+        Collections.sort(usersList, comparator)
+        notifyDataSetChanged()
+    }
+
+    fun sortByDesc(){
+        val comparator: Comparator<MultiSelectUser> =
+            Comparator { object1: MultiSelectUser, object2: MultiSelectUser ->
+                object2.userName.compareTo(object1.userName, true)
+            }
+        Collections.sort(usersList, comparator)
+        notifyDataSetChanged()
+    }
 
     inner class ViewHolder(private val mView: View) : RecyclerView.ViewHolder(mView) {
 

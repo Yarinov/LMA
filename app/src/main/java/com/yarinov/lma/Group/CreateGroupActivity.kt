@@ -6,9 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.yarinov.lma.Meeting.SetupMeetingActivity
 import com.yarinov.lma.R
 
 
@@ -49,7 +47,7 @@ class CreateGroupActivity : AppCompatActivity() {
 
 
         usersInGroupTagRecyclerList!!.addOnItemClickListener(object:
-            CreateGroupActivity.OnItemClickListener {
+            OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
                 usersNameInTagArrayList!!.removeAt(position)
                 usersTagsInGroupAdapter!!.notifyDataSetChanged()
@@ -88,6 +86,7 @@ class CreateGroupActivity : AppCompatActivity() {
 
     fun addFriendsToGroup(view: View){
         val intent = Intent(this, SelectFriendsToGroup::class.java)
+        intent.putExtra("selectedFriends", usersNameInTagArrayList)
         startActivity(intent)
     }
 }

@@ -1,12 +1,13 @@
 package com.yarinov.lma.Group
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
+import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -17,11 +18,15 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.yarinov.lma.R
 
+
 class SelectFriendsToGroup : AppCompatActivity() {
 
     var user: FirebaseUser? = null
 
     private var userSearchInput: EditText? = null
+
+    private var loadingLayout: LinearLayout? = null
+    private var selectFriendLayout: LinearLayout? = null
 
 
     private var friendsList: RecyclerView? = null
@@ -37,8 +42,18 @@ class SelectFriendsToGroup : AppCompatActivity() {
         friendsList = findViewById(R.id.myFriendsList)
         userSearchInput = findViewById(R.id.userSearchInput)
 
+        loadingLayout = findViewById(R.id.loadingLayout)
+        selectFriendLayout = findViewById(R.id.selectFriendLayout)
 
-        userFriendsObjectArrayList = ArrayList()
+
+        userFriendsObjectArrayList = try {
+            val extras = intent.extras
+            (extras!!.getSerializable("selectedFriends") as ArrayList<MultiSelectUser>?)!!
+
+
+        } catch (e: KotlinNullPointerException) {
+            ArrayList()
+        }
 
         friendsListAdapter =
             MultiSelectRecyclerAdapter(this, userFriendsObjectArrayList)
@@ -48,24 +63,25 @@ class SelectFriendsToGroup : AppCompatActivity() {
         friendsList!!.adapter = friendsListAdapter
 
 
-        friendsList!!.addOnItemClickListener(object:
-            SelectFriendsToGroup.OnItemClickListener {
+        friendsList!!.addOnItemClickListener(object :
+            OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
 
-                if (!selectedFriendsArrayList.contains(userFriendsObjectArrayList[position])){
-                    selectedFriendsArrayList.add(userFriendsObjectArrayList[position])
-                    userFriendsObjectArrayList[position].isSelected = true
+
+                if (!selectedFriendsArrayList.contains(friendsListAdapter!!.getItem(position))) {
+                    selectedFriendsArrayList.add(friendsListAdapter!!.getItem(position))
+                    friendsListAdapter!!.getItem(position).isSelected = true
 
                     friendsListAdapter!!.notifyItemChanged(position)
-                } else{
-                    selectedFriendsArrayList.remove(userFriendsObjectArrayList[position])
-                    userFriendsObjectArrayList[position].isSelected = false
+                } else {
+                    selectedFriendsArrayList.remove(friendsListAdapter!!.getItem(position))
+                    friendsListAdapter!!.getItem(position).isSelected = false
 
                     friendsListAdapter!!.notifyItemChanged(position)
                 }
 
 
-                println(selectedFriendsArrayList)
+                println(friendsListAdapter!!.getItem(position))
             }
         })
 
@@ -144,10 +160,18 @@ class SelectFriendsToGroup : AppCompatActivity() {
             val postListener = object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     // Get Post object and use the values to update the UI
-                    var userTemp = MultiSelectUser(dataSnapshot.child("Name").value as String, userFriendId, false)
+                    var userTemp = MultiSelectUser(
+                        dataSnapshot.child("Name").value as String,
+                        userFriendId,
+                        false
+                    )
                     if (!userFriendsObjectArrayList.contains(userTemp))
                         userFriendsObjectArrayList.add(userTemp)
 
+                    loadingLayout!!.visibility = View.GONE
+                    selectFriendLayout!!.visibility = View.VISIBLE
+
+                    friendsListAdapter!!.sortByAsc()
                     friendsListAdapter!!.notifyDataSetChanged()
                 }
 
@@ -165,7 +189,7 @@ class SelectFriendsToGroup : AppCompatActivity() {
         }
     }
 
-    fun passSelectedUsers(view: View){
+    fun passSelectedUsers(view: View) {
         val intent = Intent(this, CreateGroupActivity::class.java)
         intent.putExtra("selectedFriends", selectedFriendsArrayList)
         startActivity(intent)
@@ -178,7 +202,8 @@ class SelectFriendsToGroup : AppCompatActivity() {
     }
 
     fun RecyclerView.addOnItemClickListener(onClickListener: OnItemClickListener) {
-        this.addOnChildAttachStateChangeListener(object: RecyclerView.OnChildAttachStateChangeListener {
+        this.addOnChildAttachStateChangeListener(object :
+            RecyclerView.OnChildAttachStateChangeListener {
 
             override fun onChildViewDetachedFromWindow(view: View) {
                 view?.setOnClickListener(null)
