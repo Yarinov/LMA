@@ -139,10 +139,19 @@ class CreateGroupActivity : AppCompatActivity() {
         var membersMap = HashMap<String, Boolean>()
         membersMap.put(myId, true)
 
+        //Update the users groups database
+        FirebaseDatabase.getInstance().getReference().child("Users").child(myId).child("Groups")
+            .child(groupId.toString()).setValue(true)
+
         for (member in usersNameInTagArrayList!!) {
             membersMap.put(member.userId, true)
+
+            FirebaseDatabase.getInstance().getReference().child("Users").child(member.userId).child("Groups")
+                .child(groupId.toString()).setValue(true)
         }
 
+
+        //Creating the group in separate section and add the members
         FirebaseDatabase.getInstance().getReference().child("Groups").child(groupId.toString())
             .setValue(groupMap)
 

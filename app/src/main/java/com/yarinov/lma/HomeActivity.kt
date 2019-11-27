@@ -22,11 +22,11 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.yarinov.lma.Authentication.LoginActivity
 import com.yarinov.lma.Glide.GlideApp
-import com.yarinov.lma.Info.AboutActivity
 import com.yarinov.lma.Group.CreateGroupActivity
+import com.yarinov.lma.Info.AboutActivity
 import com.yarinov.lma.Meeting.SetupMeetingActivity
+import com.yarinov.lma.Notification.CustomNotification
 import com.yarinov.lma.Notification.NotificationAdapter
-import com.yarinov.lma.Notification.customNotification
 import com.yarinov.lma.User.FriendsActivity
 import de.hdodenhof.circleimageview.CircleImageView
 import io.github.yavski.fabspeeddial.FabSpeedDial
@@ -46,7 +46,7 @@ class HomeActivity : AppCompatActivity() {
     var post: String? = null
 
     private var notificationListAdapter: NotificationAdapter? = null
-    private var notificationArrayList: ArrayList<customNotification> = ArrayList()
+    private var notificationArrayList: ArrayList<CustomNotification> = ArrayList()
 
     override fun onStart() {
         super.onStart()
@@ -70,6 +70,8 @@ class HomeActivity : AppCompatActivity() {
         profilePic = findViewById(R.id.profileImageHome)
         noActivityText = findViewById(R.id.noActivityText)
         userNotificationList = findViewById(R.id.userNotificationList)
+
+        var popupMenu = findViewById<FabSpeedDial>(R.id.menuPopup)
 
         //Disable home layout till data load
         homeLayout?.visibility = View.GONE
@@ -134,9 +136,6 @@ class HomeActivity : AppCompatActivity() {
 
 
         }
-
-
-        var popupMenu = findViewById<FabSpeedDial>(R.id.menuPopup)
 
         popupMenu.setMenuListener(object : SimpleMenuListenerAdapter() {
             override fun onPrepareMenu(navigationMenu: NavigationMenu?): Boolean {
@@ -249,13 +248,29 @@ class HomeActivity : AppCompatActivity() {
 
                     var notificationId = childDataSnapshot.key
                     val notificationType = childDataSnapshot.child("type").value
+                    var groupAffecting = childDataSnapshot.child("groupAffiliation").value
 
                     var friendId = ""
+                    var groupId = ""
+                    var groupName = ""
 
                     if (notificationType!!.equals("sent")) {
-                        friendId = childDataSnapshot.child("to").value as String
-                    } else {
+
+                        if (groupAffecting!!.equals("none")) {
+                            friendId = childDataSnapshot.child("to").value as String
+                        } else {
+                            groupId = groupAffecting.toString()
+                            groupName = childDataSnapshot.child("to").value as String
+
+                        }
+                    } else {//Received
+
                         friendId = childDataSnapshot.child("from").value as String
+
+                        if (!groupAffecting!!.equals("none")) {
+                            groupId = groupAffecting.toString()
+                            groupName = childDataSnapshot.child("groupName").value as String
+                        }
                     }
                     var date = childDataSnapshot.child("date").value
                     var place = childDataSnapshot.child("place").value
@@ -274,22 +289,59 @@ class HomeActivity : AppCompatActivity() {
                         override fun onDataChange(p0: DataSnapshot) {
                             var toName = p0.value
 
-                            var notificationObject = customNotification(
-                                notificationId,
-                                userId,
-                                myName as String?,
-                                friendId,
-                                toName as String?,
-                                date as String?,
-                                time as String?,
-                                place as String?,
-                                notificationType as String?,
-                                status as String?
-                            )
+                            var notificationObject: CustomNotification
 
-                            System.out.println(notificationObject)
+                            //If - this is 1-to-1 meeting
+                            if (groupAffecting.equals("none")) {
+                                notificationObject = CustomNotification(
+                                    notificationId.toString(),
+                                    userId,
+                                    myName.toString(),
+                                    friendId,
+                                    toName.toString(),
+                                    date.toString(),
+                                    time.toString(),
+                                    place.toString(),
+                                    notificationType.toString(),
+                                    status.toString(),
+                                    "Single"
+                                )
+                            } else { // Else - this is group meeting
 
+                                if (notificationType == "sent"){ // If - this is a group meeting I set up
+                                    notificationObject = CustomNotification(
+                                        notificationId.toString(),
+                                        userId,
+                                        myName.toString(),
+                                        groupId,
+                                        groupName,
+                                        date.toString(),
+                                        time.toString(),
+                                        place.toString(),
+                                        notificationType.toString(),
+                                        status.toString(),
+                                        "Group"
+                                    )
+                                }else{ // Else - I didn't set this group meeting
+                                    notificationObject = CustomNotification(
+                                        notificationId.toString(),
+                                        userId,
+                                        myName.toString(),
+                                        toName.toString(),
+                                        groupName,
+                                        date.toString(),
+                                        time.toString(),
+                                        place.toString(),
+                                        notificationType.toString(),
+                                        status.toString(),
+                                        "Group"
+                                    )
+                                }
+                            }
+
+                            //Add this notification to the notification array
                             notificationArrayList.add(notificationObject)
+
                             userNotificationList!!.visibility = View.VISIBLE
                             noActivityText!!.visibility = View.GONE
 
@@ -304,7 +356,6 @@ class HomeActivity : AppCompatActivity() {
                     }
 
                     currentUserFriendDatabase.addValueEventListener(getUserNameListener)
-                    //contactListAdapter!!.notifyDataSetChanged()
                 }
 
             }

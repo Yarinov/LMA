@@ -95,7 +95,7 @@ class AddFriendFragment : Fragment() {
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // Get Post object and use the values to update the UI
-
+                userFriendIdArrayList.clear()
                 //Get all user friend
                 for (childDataSnapshot in dataSnapshot.children) {
                     val userFriendData = childDataSnapshot.key
@@ -119,7 +119,6 @@ class AddFriendFragment : Fragment() {
 
         var currentUserId = user!!.uid
 
-        usersIdArrayList.clear()
 
         val currentUsersRootDatabase =
             FirebaseDatabase.getInstance().getReference().child("Users")
@@ -128,7 +127,7 @@ class AddFriendFragment : Fragment() {
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // Get Post object and use the values to update the UI
-
+                usersIdArrayList.clear()
                 //Get all user friend
                 for (childDataSnapshot in dataSnapshot.children) {
                     val userId = childDataSnapshot.key

@@ -28,17 +28,55 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/userNameText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5sp"
-                android:layout_marginTop="4sp"
-                android:layout_marginBottom="3sp"
-                android:text="UserName"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/userNameText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5sp"
+                    android:layout_marginTop="4sp"
+                    android:layout_marginBottom="3sp"
+                    android:text="UserName"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/fromGroupNotification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5sp"
+                    android:layout_marginTop="4sp"
+                    android:text="From:"
+                    android:visibility="gone"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/fromUserGroupNotification"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="fromUser" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -147,6 +185,16 @@
                 android:visibility="gone"
                 android:background="@drawable/meeting_pending_ic"
                 />
+
+            <Button
+                android:id="@+id/groupMeetingMore"
+                android:layout_width="23sp"
+                android:layout_height="23sp"
+                android:layout_gravity="center"
+                android:layout_margin="8sp"
+                android:layout_weight="1"
+                android:background="@drawable/group_notification_more_ic"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/acceptMeetingButton"

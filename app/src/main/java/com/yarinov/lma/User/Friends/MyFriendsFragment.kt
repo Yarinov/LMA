@@ -15,8 +15,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.yarinov.lma.R
-import com.yarinov.lma.User.User
 import com.yarinov.lma.User.FriendsListAdapter
+import com.yarinov.lma.User.User
 
 
 class MyFriendsFragment : Fragment() {
@@ -81,7 +81,6 @@ class MyFriendsFragment : Fragment() {
                     val userFriendData = childDataSnapshot.key
                     if (childDataSnapshot.value as Boolean)
                         userFriendIdArrayList.add(userFriendData!!)
-                    //contactListAdapter!!.notifyDataSetChanged()
                 }
 
                 loadContactsToAdapter()

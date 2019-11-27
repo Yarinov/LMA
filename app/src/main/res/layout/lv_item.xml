@@ -46,7 +46,7 @@
         android:layout_height="1dp"
         android:layout_marginLeft="8sp"
         android:layout_marginRight="8sp"
-        android:background="@color/Gray" />
+        android:background="@color/LightBrown" />
 
 
 </LinearLayout>

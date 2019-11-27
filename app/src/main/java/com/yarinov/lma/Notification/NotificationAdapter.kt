@@ -14,7 +14,7 @@ import com.yarinov.lma.R
 
 class NotificationAdapter(
     private val context: Context,
-    private val notificationArrayList: List<customNotification>
+    private val notificationArrayList: List<CustomNotification>
 ) :
     RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
 
@@ -29,51 +29,60 @@ class NotificationAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-//Get and set name
-        var nameString = notificationArrayList[position].toName
-        holder.tvname!!.setText(nameString)
 
         //Get notification type and status for placing the icons accordingly
         var notificationType = notificationArrayList[position].type
         var notificationStatus = notificationArrayList[position].status
+        var notificationMood = notificationArrayList[position].mood
+
+
+
 
         //If current user sent meeting request
         if (notificationType.equals("sent")) {
             holder.tvnotificationic!!.setImageResource(R.drawable.sent_ic)
 
             //Set the meeting status icon
-            if (notificationStatus.equals("pending")) {
-                holder.pendingMeetingButton!!.visibility = View.VISIBLE
+            if (notificationMood == "Single"){
+                if (notificationStatus.equals("pending")) {
+                    holder.pendingMeetingButton!!.visibility = View.VISIBLE
 
-                holder.denyMeetingButton!!.visibility = View.GONE
-                holder.acceptMeetingButton!!.visibility = View.GONE
+                    holder.denyMeetingButton!!.visibility = View.GONE
+                    holder.acceptMeetingButton!!.visibility = View.GONE
 
-            } else if (notificationStatus.equals("deny")) {
-                holder.pendingMeetingButton!!.visibility = View.GONE
-                holder.acceptMeetingButton!!.visibility = View.GONE
+                } else if (notificationStatus.equals("deny")) {
+                    holder.pendingMeetingButton!!.visibility = View.GONE
+                    holder.acceptMeetingButton!!.visibility = View.GONE
 
-                holder.denyMeetingButton!!.visibility = View.VISIBLE
-            } else {
-                holder.pendingMeetingButton!!.visibility = View.GONE
-                holder.denyMeetingButton!!.visibility = View.GONE
+                    holder.denyMeetingButton!!.visibility = View.VISIBLE
+                } else {
+                    holder.pendingMeetingButton!!.visibility = View.GONE
+                    holder.denyMeetingButton!!.visibility = View.GONE
 
-                holder.acceptMeetingButton!!.visibility = View.VISIBLE
+                    holder.acceptMeetingButton!!.visibility = View.VISIBLE
+                }
+            }else{//This is a group meeting
+                holder.groupMeetingMoreButton!!.visibility = View.VISIBLE
             }
 
             //If current user received meeting request
         } else {
             holder.tvnotificationic!!.setImageResource(R.drawable.received_ic)
 
-            //Set the meeting status icon
-            if (notificationStatus.equals("pending")) {
-                holder.acceptMeetingButton!!.visibility = View.VISIBLE
-                holder.denyMeetingButton!!.visibility = View.VISIBLE
-            } else if (notificationStatus.equals("deny")) {
-                holder.denyMeetingButton!!.visibility = View.VISIBLE
-                holder.acceptMeetingButton!!.visibility = View.GONE
-            } else {
-                holder.acceptMeetingButton!!.visibility = View.VISIBLE
-                holder.denyMeetingButton!!.visibility = View.GONE
+            if (notificationMood == "Single") {
+                //Set the meeting status icon
+                if (notificationStatus.equals("pending")) {
+                    holder.acceptMeetingButton!!.visibility = View.VISIBLE
+                    holder.denyMeetingButton!!.visibility = View.VISIBLE
+                } else if (notificationStatus.equals("deny")) {
+                    holder.denyMeetingButton!!.visibility = View.VISIBLE
+                    holder.acceptMeetingButton!!.visibility = View.GONE
+                } else {
+                    holder.acceptMeetingButton!!.visibility = View.VISIBLE
+                    holder.denyMeetingButton!!.visibility = View.GONE
+                }
+            }else{//This is a group meeting
+                holder.groupMeetingMoreButton!!.visibility = View.VISIBLE
             }
         }
 
@@ -84,13 +93,32 @@ class NotificationAdapter(
         var whereLabel = notificationArrayList[position].place
 
         holder.tvwhere!!.isSelected = true
+        holder.tvname!!.isSelected = true
+        holder.fromUserText!!.isSelected = true
 
-        holder.tvdate!!.setText(dateLabel)
-        holder.tvwhere!!.setText(whereLabel)
-        holder.tvtime!!.setText(timeLabel)
+        //Get and set name
+        var nameString = notificationArrayList[position].toName
+        holder.tvname!!.setText(nameString)
+
+        if (notificationMood == "Group") {
+            holder.fromText!!.visibility = View.VISIBLE
+            holder.fromUserText!!.visibility = View.VISIBLE
+
+            if (notificationType.equals("sent")){
+                holder.fromUserText!!.text = notificationArrayList[position].fromName
+            }else{
+                holder.fromUserText!!.text = notificationArrayList[position].toId
+
+            }
+
+        }
+
+        holder.tvdate!!.text = dateLabel
+        holder.tvwhere!!.text = whereLabel
+        holder.tvtime!!.text = timeLabel
 
 
-
+        //TODO Meeting accept/reject for groups
         //User accept meeting
         holder.acceptMeetingButton!!.setOnClickListener {
 
@@ -155,11 +183,16 @@ class NotificationAdapter(
         var tvdate: TextView? = null
         var tvtime: TextView? = null
         var tvwhere: TextView? = null
+
+        var fromText: TextView? = null
+        var fromUserText: TextView? = null
+
         var tvnotificationic: ImageView? = null
 
         var acceptMeetingButton: Button? = null
         var denyMeetingButton: Button? = null
         var pendingMeetingButton: Button? = null
+        var groupMeetingMoreButton: Button? = null
 
         init {
 
@@ -167,12 +200,17 @@ class NotificationAdapter(
             tvdate = mView.findViewById(R.id.dateNotificationData) as TextView
             tvtime = mView.findViewById(R.id.timeNotificationData) as TextView
             tvwhere = mView.findViewById(R.id.locationNotificationData) as TextView
+
+            fromText = mView.findViewById(R.id.fromGroupNotification)
+            fromUserText = mView.findViewById(R.id.fromUserGroupNotification)
+
             tvnotificationic =
                 mView.findViewById(R.id.notificationTypeIcon) as ImageView
 
             acceptMeetingButton = mView.findViewById(R.id.acceptMeetingButton)
             denyMeetingButton = mView.findViewById(R.id.denyMeetingButton)
             pendingMeetingButton = mView.findViewById(R.id.pendingMeetingButton)
+            groupMeetingMoreButton = mView.findViewById(R.id.groupMeetingMore)
         }
     }
 

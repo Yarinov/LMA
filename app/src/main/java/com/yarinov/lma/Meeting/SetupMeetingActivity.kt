@@ -7,11 +7,8 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View
-import android.widget.CalendarView
+import android.widget.*
 import android.widget.CalendarView.OnDateChangeListener
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +20,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.mcsoft.timerangepickerdialog.RangeTimePickerDialog
+import com.yarinov.lma.Group.Group
 import com.yarinov.lma.HomeActivity
 import com.yarinov.lma.R
 import com.yarinov.lma.User.User
@@ -38,6 +36,10 @@ class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelecte
     private var userFriendsObjectArrayList: ArrayList<User> = ArrayList()
     private var userFriendIdArrayList: ArrayList<String>? = null
 
+    private var groupListAdapter: GroupListAdapter? = null
+    private var userGroupsObjectArrayList: ArrayList<Group> = ArrayList()
+    private var userGroupArrayList: ArrayList<String>? = null
+
     private var dateInput: EditText? = null
     private var timeInput: EditText? = null
     private var contactSearchInput: EditText? = null
@@ -52,9 +54,18 @@ class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelecte
 
     private var theFriendName: String? = null
     private var theFriendId: String? = null
+
+    private var theGroupName: String? = null
+    private var theGroupId: String? = null
+
     private var theDate: String? = null
     private var thePlace: String? = null
     private var theTime: String? = null
+
+    private var meetingMoodIcon: ImageView? = null
+    private var meetingMood: Boolean? = null //True = Single, False = Group
+    private var passTheFirstSection: Boolean? = null
+    private var listTitle: TextView? = null
 
     var user: FirebaseUser? = null
 
@@ -77,20 +88,32 @@ class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelecte
         secondStepLayout = findViewById(R.id.secondStepLayout)
         thirdStepLayout = findViewById(R.id.thirdStepLayout)
 
+        meetingMoodIcon = findViewById(R.id.meetingMoodIcon)
+        listTitle = findViewById(R.id.listTitle)
+        meetingMood = true
+        passTheFirstSection = false
+
         userFriendIdArrayList = ArrayList()
+        userGroupArrayList = ArrayList()
+
         contactList = findViewById(R.id.contactList)
 
 
         userFriendsObjectArrayList = ArrayList()
+        userGroupsObjectArrayList = ArrayList()
 
         contactListAdapter =
             ContactListAdapter(this, userFriendsObjectArrayList)
+
+        groupListAdapter =
+            GroupListAdapter(this, userGroupsObjectArrayList)
 
         contactList!!.setHasFixedSize(true)
         contactList!!.layoutManager = LinearLayoutManager(this)
         contactList!!.adapter = contactListAdapter
 
         loadUserFriendsData()
+        loadUserGroupsData()
 
         //Filter contact list
         contactSearchInput!!.addTextChangedListener(object : TextWatcher {
@@ -107,13 +130,20 @@ class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelecte
 
 
 
-        contactList!!.addOnItemClickListener(object: OnItemClickListener {
+        contactList!!.addOnItemClickListener(object : OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
-                theFriendName = userFriendsObjectArrayList!![position].getNames()
-                theFriendId = userFriendsObjectArrayList!![position].getId()
+
+                if (meetingMood!!){
+                    theFriendName = userFriendsObjectArrayList[position].getNames()
+                    theFriendId = userFriendsObjectArrayList[position].getId()
+                }else{
+                    theGroupName = userGroupsObjectArrayList[position].groupName
+                    theGroupId = userGroupsObjectArrayList[position].groupId
+                }
 
                 firstStepLayout!!.visibility = View.GONE
                 secondStepLayout!!.visibility = View.VISIBLE
+                passTheFirstSection = true
             }
         })
 
@@ -138,7 +168,8 @@ class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelecte
     }
 
     fun RecyclerView.addOnItemClickListener(onClickListener: OnItemClickListener) {
-        this.addOnChildAttachStateChangeListener(object: RecyclerView.OnChildAttachStateChangeListener {
+        this.addOnChildAttachStateChangeListener(object :
+            RecyclerView.OnChildAttachStateChangeListener {
 
             override fun onChildViewDetachedFromWindow(view: View) {
                 view?.setOnClickListener(null)
@@ -159,6 +190,7 @@ class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelecte
 
         var userId = user!!.uid
 
+        userFriendIdArrayList!!.clear()
 
         val currentUserFriendRootDatabase =
             FirebaseDatabase.getInstance().getReference().child("Friends")
@@ -168,7 +200,6 @@ class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelecte
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // Get Post object and use the values to update the UI
-
                 userFriendIdArrayList!!.clear()
 
                 //Get all user friend
@@ -232,6 +263,84 @@ class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelecte
 
     }
 
+    private fun loadUserGroupsData() {
+
+        var userId = user!!.uid
+
+        userGroupArrayList!!.clear()
+
+        val currentUserGroupRootDatabase =
+            FirebaseDatabase.getInstance().reference.child("Users")
+                .child(userId).child("Groups")
+
+        //Set home activity according to the user details
+        val postListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // Get Post object and use the values to update the UI
+
+                userGroupArrayList!!.clear()
+
+                //Get all user groups
+                for (childDataSnapshot in dataSnapshot.children) {
+                    val userGroupData = childDataSnapshot.key
+
+                    if (childDataSnapshot.value as Boolean)
+                        userGroupArrayList!!.add(userGroupData.toString())
+                }
+
+
+                loadGroupsToAdapter()
+
+
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Getting Post failed, log a message
+                // ...
+
+            }
+        }
+        currentUserGroupRootDatabase.addValueEventListener(postListener)
+
+    }
+
+    private fun loadGroupsToAdapter() {
+        userGroupsObjectArrayList.clear()
+
+        for (userGroupId in userGroupArrayList!!) {
+
+            var currentUserFriendRootDatabase =
+                FirebaseDatabase.getInstance().getReference().child("Groups")
+                    .child(userGroupId)
+
+            //Set home activity according to the user details
+            val postListener = object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    // Get Post object and use the values to update the UI
+                    var userTemp = Group(
+                        dataSnapshot.key as String,
+                        dataSnapshot.child("groupName").value as String,
+                        dataSnapshot.child("groupDesc").value as String
+                    )
+                    userGroupsObjectArrayList!!.add(userTemp)
+
+                    //Set the contact list adapter with all the data
+                     groupListAdapter!!.notifyDataSetChanged()
+
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // Getting Post failed, log a message
+                    // ...
+
+                }
+            }
+            currentUserFriendRootDatabase.addValueEventListener(postListener)
+
+
+        }
+    }
+
 
     fun toThirdStep(view: View) {
 
@@ -263,11 +372,20 @@ class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelecte
         }
 
         val intent = Intent(this, MeetingSumActivity::class.java)
-        intent.putExtra("theFriendName", theFriendName)
+
+        if (meetingMood!!){
+            intent.putExtra("friendName", theFriendName)
+            intent.putExtra("friendId", theFriendId)
+
+        }else{
+            intent.putExtra("groupName", theGroupName)
+            intent.putExtra("groupId", theGroupId)
+        }
+
         intent.putExtra("theDate", theDate)
         intent.putExtra("thePlace", location)
-        intent.putExtra("friendId", theFriendId)
         intent.putExtra("theTime", theTime)
+        intent.putExtra("meetingMood", meetingMood!!)
         startActivity(intent)
         finish()
     }
@@ -303,10 +421,45 @@ class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelecte
     }
 
     override fun onSelectedTime(hourStart: Int, minuteStart: Int, hourEnd: Int, minuteEnd: Int) {
-       theTime = hourStart.toString()  + ":" + minuteStart + " - " + hourEnd + ":" + minuteEnd
+        theTime = "$hourStart:$minuteStart - $hourEnd:$minuteEnd"
 
         timeInput!!.setText(theTime)
 
+
+    }
+
+    fun changeMeetingMood(view: View) {
+
+        if (passTheFirstSection!!) {
+
+            val alert = AlertDialog.Builder(this@SetupMeetingActivity)
+            alert.setMessage("Switching mood will delete any progress done, Are you sure?")
+                .setPositiveButton("Yes") { dialog, which ->
+                    startActivity(intent)
+                    finish()
+                }.setNegativeButton("Cancel", null)
+
+            val alert1 = alert.create()
+            alert1.show()
+
+        } else {
+            //Go from single mood to group mood
+            if (meetingMood!!) {
+                meetingMoodIcon!!.setImageResource(R.drawable.meeting_group_mood_ic)
+                listTitle!!.text = "My Groups"
+
+                contactList!!.adapter = groupListAdapter
+                meetingMood = false
+            }
+            //Go from group mood to single mood
+            else {
+                meetingMoodIcon!!.setImageResource(R.drawable.meeting_single_mood_ic)
+                listTitle!!.text = "My Friends"
+
+                contactList!!.adapter = contactListAdapter
+                meetingMood = true
+            }
+        }
 
     }
 
