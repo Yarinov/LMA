@@ -23,6 +23,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.yarinov.lma.Authentication.LoginActivity
 import com.yarinov.lma.Glide.GlideApp
 import com.yarinov.lma.Group.CreateGroupActivity
+import com.yarinov.lma.Group.MyGroupsActivity
 import com.yarinov.lma.Info.AboutActivity
 import com.yarinov.lma.Meeting.SetupMeetingActivity
 import com.yarinov.lma.Notification.CustomNotification
@@ -155,6 +156,10 @@ class HomeActivity : AppCompatActivity() {
                         aboutOpen()
                     }
 
+                    "My Groups" -> {
+                        myGroupsOpen()
+                    }
+
                 }
                 return false
             }
@@ -182,6 +187,11 @@ class HomeActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    fun myGroupsOpen() {
+        val intent = Intent(this, MyGroupsActivity::class.java)
+        startActivity(intent)
+    }
+
     fun setupMeetingSectionOpen(view: View) {
         val intent = Intent(this, SetupMeetingActivity::class.java)
         startActivity(intent)
@@ -196,7 +206,7 @@ class HomeActivity : AppCompatActivity() {
         minimizeApp()
     }
 
-    fun minimizeApp() {
+    private fun minimizeApp() {
         val startMain = Intent(Intent.ACTION_MAIN)
         startMain.addCategory(Intent.CATEGORY_HOME)
         startMain.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -278,6 +288,7 @@ class HomeActivity : AppCompatActivity() {
                     println(time)
                     var status = childDataSnapshot.child("status").value
 
+                    var datePosted = childDataSnapshot.child("datePosted").value
 
                     //Get Friend Name
                     val currentUserFriendDatabase =
@@ -304,7 +315,8 @@ class HomeActivity : AppCompatActivity() {
                                     place.toString(),
                                     notificationType.toString(),
                                     status.toString(),
-                                    "Single"
+                                    "Single",
+                                    datePosted.toString()
                                 )
                             } else { // Else - this is group meeting
 
@@ -320,7 +332,8 @@ class HomeActivity : AppCompatActivity() {
                                         place.toString(),
                                         notificationType.toString(),
                                         status.toString(),
-                                        "Group"
+                                        "Group",
+                                        datePosted.toString()
                                     )
                                 }else{ // Else - I didn't set this group meeting
                                     notificationObject = CustomNotification(
@@ -334,13 +347,15 @@ class HomeActivity : AppCompatActivity() {
                                         place.toString(),
                                         notificationType.toString(),
                                         status.toString(),
-                                        "Group"
+                                        "Group",
+                                        datePosted.toString()
                                     )
                                 }
                             }
 
                             //Add this notification to the notification array
                             notificationArrayList.add(notificationObject)
+                            notificationListAdapter!!.sortByAsc()
 
                             userNotificationList!!.visibility = View.VISIBLE
                             noActivityText!!.visibility = View.GONE

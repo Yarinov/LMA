@@ -412,9 +412,9 @@ class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelecte
 
         selectTimeRangeDialog.setIs24HourView(true) // Indicates if the format should be 24 hours
         selectTimeRangeDialog.setColorTextButton(R.color.colorPrimary)
-        selectTimeRangeDialog.setColorTabSelected(R.color.colorPrimary)
-        selectTimeRangeDialog.setColorBackgroundTimePickerHeader(R.color.colorPrimaryDark)
-        selectTimeRangeDialog.setColorBackgroundHeader(R.color.colorPrimaryDark) // Set Color of Background header dialog
+        selectTimeRangeDialog.setColorTabSelected(R.color.colorPrimaryDark)
+        selectTimeRangeDialog.setColorBackgroundTimePickerHeader(R.color.colorPrimary)
+        selectTimeRangeDialog.setColorBackgroundHeader(R.color.colorPrimary) // Set Color of Background header dialog
 
         val fragmentManager: FragmentManager = fragmentManager
         selectTimeRangeDialog.show(fragmentManager, "")

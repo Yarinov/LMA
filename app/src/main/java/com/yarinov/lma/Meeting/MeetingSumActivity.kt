@@ -147,6 +147,8 @@ class MeetingSumActivity : AppCompatActivity() {
                 FirebaseDatabase.getInstance().getReference().child("Groups").child(groupId!!)
                     .child("groupMembers")
 
+
+            var membersMeetingStatusMap = HashMap<String, String>()
             var groupMembers = ArrayList<String>()
 
             val postListener = object : ValueEventListener {
@@ -159,10 +161,20 @@ class MeetingSumActivity : AppCompatActivity() {
                     for (childDataSnapshot in dataSnapshot.children) {
                         val groupMemberData = childDataSnapshot.key
 
+                        if (groupMemberData != myId)
+                            membersMeetingStatusMap[groupMemberData.toString()] = "pending"
+
+                        else
+                            membersMeetingStatusMap[groupMemberData.toString()] = "accept"
+
                         if (childDataSnapshot.value as Boolean && !groupMemberData!!.equals(myId)) {
                             groupMembers.add(groupMemberData.toString())
                         }
                     }
+
+
+                    FirebaseDatabase.getInstance().getReference().child("Groups").child(groupId!!)
+                        .child("Meetings").child(notificationId.toString()).setValue(membersMeetingStatusMap)
 
                     sendMeetingToGroupMembers(groupMembers, notificationId, receivedMeetingData)
 
@@ -175,6 +187,7 @@ class MeetingSumActivity : AppCompatActivity() {
                 }
             }
             groupsDb.addValueEventListener(postListener)
+
 
 
             //Write to current user notification

@@ -6,7 +6,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/m_groups"
-            android:title="Your Groups"
+            android:title="My Groups"
             android:icon="@drawable/ic_group" />
 
         <item

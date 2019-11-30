@@ -1,5 +1,6 @@
 package com.yarinov.lma.Notification
 
+import android.app.Dialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.FirebaseDatabase
 import com.yarinov.lma.R
+import java.util.*
+import kotlin.Comparator
 
 
 class NotificationAdapter(
@@ -17,6 +20,8 @@ class NotificationAdapter(
     private val notificationArrayList: List<CustomNotification>
 ) :
     RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
+
+    var groupMeetingMoreDialog: Dialog? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
@@ -36,14 +41,12 @@ class NotificationAdapter(
         var notificationMood = notificationArrayList[position].mood
 
 
-
-
         //If current user sent meeting request
         if (notificationType.equals("sent")) {
             holder.tvnotificationic!!.setImageResource(R.drawable.sent_ic)
 
             //Set the meeting status icon
-            if (notificationMood == "Single"){
+            if (notificationMood == "Single") {
                 if (notificationStatus.equals("pending")) {
                     holder.pendingMeetingButton!!.visibility = View.VISIBLE
 
@@ -61,7 +64,7 @@ class NotificationAdapter(
 
                     holder.acceptMeetingButton!!.visibility = View.VISIBLE
                 }
-            }else{//This is a group meeting
+            } else {//This is a group meeting
                 holder.groupMeetingMoreButton!!.visibility = View.VISIBLE
             }
 
@@ -81,7 +84,7 @@ class NotificationAdapter(
                     holder.acceptMeetingButton!!.visibility = View.VISIBLE
                     holder.denyMeetingButton!!.visibility = View.GONE
                 }
-            }else{//This is a group meeting
+            } else {//This is a group meeting
                 holder.groupMeetingMoreButton!!.visibility = View.VISIBLE
             }
         }
@@ -104,9 +107,15 @@ class NotificationAdapter(
             holder.fromText!!.visibility = View.VISIBLE
             holder.fromUserText!!.visibility = View.VISIBLE
 
-            if (notificationType.equals("sent")){
+            holder.denyMeetingButton!!.visibility = View.GONE
+            holder.acceptMeetingButton!!.visibility = View.GONE
+            holder.pendingMeetingButton!!.visibility = View.GONE
+
+
+
+            if (notificationType.equals("sent")) {
                 holder.fromUserText!!.text = notificationArrayList[position].fromName
-            }else{
+            } else {
                 holder.fromUserText!!.text = notificationArrayList[position].toId
 
             }
@@ -171,6 +180,18 @@ class NotificationAdapter(
 
         }
 
+        holder.groupMeetingMoreButton!!.setOnClickListener {
+
+        }
+    }
+
+    fun sortByAsc(){
+        val comparator: Comparator<CustomNotification> =
+            Comparator { object1: CustomNotification, object2: CustomNotification ->
+                object2.datePosted.compareTo(object1.datePosted, true)
+            }
+        Collections.sort(notificationArrayList, comparator)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
