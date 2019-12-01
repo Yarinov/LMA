@@ -1,5 +1,6 @@
 package com.yarinov.lma.Group
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -86,7 +87,7 @@ class SingleGroupActivity : AppCompatActivity() {
 
 
         meetingListAdapter =
-            NotificationInGroupAdapter(this, groupMeetingsObjectArrayList!!)
+            NotificationInGroupAdapter(this, groupMeetingsObjectArrayList!!, groupId!!)
 
         meetingsList!!.setHasFixedSize(true)
         meetingsList!!.layoutManager = LinearLayoutManager(this)
@@ -107,6 +108,8 @@ class SingleGroupActivity : AppCompatActivity() {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
+
+                meetingsIdArrayList!!.clear()
 
                 for (meetingId in p0.children){
                     meetingsIdArrayList!!.add(meetingId.key.toString())
@@ -152,6 +155,7 @@ class SingleGroupActivity : AppCompatActivity() {
                     groupMeetingsObjectArrayList!!.add(tempNotification)
 
                     meetingListAdapter!!.notifyDataSetChanged()
+
                 }
 
             }
@@ -162,7 +166,8 @@ class SingleGroupActivity : AppCompatActivity() {
     }
 
     private fun loadGroupMembers() {
-        membersIdArrayList!!.clear()
+        membersIdArrayList = ArrayList()
+
         val currentGroupRootDatabase =
             FirebaseDatabase.getInstance().getReference().child("Groups")
                 .child(groupId!!).child("groupMembers")
@@ -215,6 +220,7 @@ class SingleGroupActivity : AppCompatActivity() {
                     loadingLayout!!.visibility = View.GONE
                     mainSingleGroupLayout!!.visibility = View.VISIBLE
 
+
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
@@ -227,5 +233,12 @@ class SingleGroupActivity : AppCompatActivity() {
 
 
         }
+    }
+
+    override fun onBackPressed() {
+
+        var intent = Intent(this, MyGroupsActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

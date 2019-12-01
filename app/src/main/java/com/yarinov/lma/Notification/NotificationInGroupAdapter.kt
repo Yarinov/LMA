@@ -1,6 +1,8 @@
 package com.yarinov.lma.Notification
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.yarinov.lma.Meeting.SingleMeetingActivity
 import com.yarinov.lma.R
 import java.util.*
 import kotlin.Comparator
@@ -17,7 +20,8 @@ import kotlin.Comparator
 
 class NotificationInGroupAdapter(
     private val context: Context,
-    private var notificationsList: List<Notification>
+    private var notificationsList: List<Notification>,
+    var groupId:String
 ) :
     RecyclerView.Adapter<NotificationInGroupAdapter.ViewHolder>(){
 
@@ -62,6 +66,13 @@ class NotificationInGroupAdapter(
         holder.tvtime!!.text = notificationsList[position].time
         holder.tvwhere!!.text = notificationsList[position].place
 
+        holder.meetingStatusButton!!.setOnClickListener {
+            var intent = Intent(context, SingleMeetingActivity::class.java)
+            intent.putExtra("groupId", groupId)
+            intent.putExtra("meetingId", notificationsList[position].meetingId)
+            context.startActivity(intent)
+            (context as Activity).finish()
+        }
 
     }
 

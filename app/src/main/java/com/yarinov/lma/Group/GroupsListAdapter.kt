@@ -1,5 +1,6 @@
 package com.yarinov.lma.Group
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -106,6 +107,7 @@ class GroupsListAdapter(
             intent.putExtra("groupId", groupId)
             intent.putExtra("groupDesc", groupsList[position].groupDesc)
             context.startActivity(intent)
+            (context as Activity).finish()
         }
 
     }

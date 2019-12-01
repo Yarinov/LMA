@@ -104,14 +104,15 @@ class MeetingSumActivity : AppCompatActivity() {
         sentMeetingData.put("date", date!!)
         sentMeetingData.put("time", time!!)
         sentMeetingData.put("place", place!!)
-        sentMeetingData.put("status", "pending")
         sentMeetingData.put("type", "sent")
         if (meetingMood!!) {
             sentMeetingData.put("to", friendId!!)
             sentMeetingData.put("groupAffiliation", "none")
+            sentMeetingData.put("status", "pending")
         } else {
             sentMeetingData.put("to", groupName!!)
             sentMeetingData.put("groupAffiliation", groupId!!)
+            sentMeetingData.put("status", "accept")
         }
 
         val currentUserNotificationsDb =

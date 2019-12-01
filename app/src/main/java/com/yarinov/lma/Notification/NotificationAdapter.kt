@@ -1,7 +1,9 @@
 package com.yarinov.lma.Notification
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.FirebaseDatabase
+import com.yarinov.lma.Meeting.SingleMeetingActivity
 import com.yarinov.lma.R
 import java.util.*
 import kotlin.Comparator
@@ -116,7 +119,13 @@ class NotificationAdapter(
             if (notificationType.equals("sent")) {
                 holder.fromUserText!!.text = notificationArrayList[position].fromName
             } else {
-                holder.fromUserText!!.text = notificationArrayList[position].toId
+
+//                FirebaseDatabase.getInstance().getReference().child("Groups")
+//                    .child(requestedUserId).child("Notifications")
+//                    .child(notificationArrayList[position].meetingId).child("status")
+//                    .setValue("deny")
+
+                holder.fromUserText!!.text = notificationArrayList[position].fromName
 
             }
 
@@ -127,7 +136,6 @@ class NotificationAdapter(
         holder.tvtime!!.text = timeLabel
 
 
-        //TODO Meeting accept/reject for groups
         //User accept meeting
         holder.acceptMeetingButton!!.setOnClickListener {
 
@@ -181,6 +189,12 @@ class NotificationAdapter(
         }
 
         holder.groupMeetingMoreButton!!.setOnClickListener {
+
+            var intent = Intent(context, SingleMeetingActivity::class.java)
+            intent.putExtra("fromActivity", "Home")
+            intent.putExtra("meetingId", notificationArrayList[position].meetingId)
+            intent.putExtra("groupId", notificationArrayList[position].toId)
+            context.startActivity(intent)
 
         }
     }

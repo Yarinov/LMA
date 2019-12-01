@@ -338,9 +338,9 @@ class HomeActivity : AppCompatActivity() {
                                 }else{ // Else - I didn't set this group meeting
                                     notificationObject = HomeNotification(
                                         notificationId.toString(),
-                                        userId,
-                                        myName.toString(),
+                                        friendId,
                                         toName.toString(),
+                                        groupId,
                                         groupName,
                                         date.toString(),
                                         time.toString(),
