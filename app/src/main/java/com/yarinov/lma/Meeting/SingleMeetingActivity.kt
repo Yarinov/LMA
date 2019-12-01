@@ -180,6 +180,29 @@ class SingleMeetingActivity : AppCompatActivity() {
         if (fromActivity == "singleGroupActivity"){
              var intent = Intent(this, SingleGroupActivity::class.java)
 
+            var currentGroupMemberRootDatabase =
+                FirebaseDatabase.getInstance().getReference().child("Groups")
+                    .child(groupId!!)
+
+            var getGroupData = object : ValueEventListener{
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    intent.putExtra("groupId", groupId)
+                    intent.putExtra("groupDesc", p0.child("groupDesc").value.toString())
+                    intent.putExtra("groupName", p0.child("groupName").value.toString())
+
+                    startActivity(intent)
+                    finish()
+
+                }
+
+            }
+
+            currentGroupMemberRootDatabase.addValueEventListener(getGroupData)
+
         }else{
             var intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)

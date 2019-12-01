@@ -18,11 +18,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_margin="8sp"
+            android:fontFamily="@font/pt_sans"
             android:text="About"
             android:textColor="@color/White"
-            android:textSize="44dp"
-            android:layout_gravity="bottom"
-            android:layout_margin="8sp"/>
+            android:textSize="44dp" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -31,9 +32,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="13sp"
+        android:fontFamily="@font/pt_sans"
+        android:padding="16dp"
         android:text="This is a text about the app and what is all about and this kind of shit.
 Need to add here some links to google play and a summry about how I am so awesome."
-        android:textSize="23dp"
-        android:padding="16dp"
-        android:textColor="@color/colorPrimaryDark"/>
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="23dp" />
+
+    <TextView
+        android:id="@+id/textView16"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10sp"
+        android:fontFamily="@font/pt_sans"
+        android:text="Icons made by Kiranshastry And Vectors Market"
+        android:textColor="@color/colorPrimaryDark" />
+
+    <TextView
+        android:id="@+id/textView20"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10sp"
+        android:fontFamily="@font/pt_sans"
+        android:text="This App Made by Yarin Knafo"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold" />
 </LinearLayout>
