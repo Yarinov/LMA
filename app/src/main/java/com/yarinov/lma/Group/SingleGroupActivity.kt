@@ -1,14 +1,17 @@
 package com.yarinov.lma.Group
 
+import android.content.DialogInterface
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -42,8 +45,9 @@ class SingleGroupActivity : AppCompatActivity() {
 
     var loadingLayout: LinearLayout? = null
     var mainSingleGroupLayout: LinearLayout? = null
+    var leaveGroupLayout: LinearLayout? = null
 
-
+    var user: FirebaseUser? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +61,9 @@ class SingleGroupActivity : AppCompatActivity() {
 
         loadingLayout = findViewById(R.id.loadingLayout)
         mainSingleGroupLayout = findViewById(R.id.mainSingleGroupLayout)
+        leaveGroupLayout = findViewById(R.id.leaveGroupLayout)
 
+        user = FirebaseAuth.getInstance().currentUser
 
         //Get and set group data
         val extras = intent.extras
@@ -93,6 +99,27 @@ class SingleGroupActivity : AppCompatActivity() {
         meetingsList!!.layoutManager = LinearLayoutManager(this)
         meetingsList!!.adapter = meetingListAdapter
 
+        leaveGroupLayout!!.setOnClickListener { leaveGroup() }
+
+    }
+
+    fun leaveGroup() {
+        val alert = AlertDialog.Builder(this@SingleGroupActivity)
+        alert.setMessage("Are you sure?")
+            .setPositiveButton("Leave Group", DialogInterface.OnClickListener { dialog, which ->
+
+                FirebaseDatabase.getInstance().getReference().child("Groups")
+                    .child(groupId!!).child("groupMembers").child(user!!.uid).removeValue()
+
+                FirebaseDatabase.getInstance().getReference().child("Users")
+                    .child(user!!.uid).child("Groups").child(groupId!!).removeValue()
+
+                finish()
+
+            }).setNegativeButton("Cancel", null)
+
+        val alert1 = alert.create()
+        alert1.show()
     }
 
     private fun loadGroupMeetings() {
@@ -102,7 +129,7 @@ class SingleGroupActivity : AppCompatActivity() {
             FirebaseDatabase.getInstance().getReference().child("Groups")
                 .child(groupId!!).child("Meetings")
 
-        var getAllGroupMeetingsIdListener = object : ValueEventListener{
+        var getAllGroupMeetingsIdListener = object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -111,7 +138,7 @@ class SingleGroupActivity : AppCompatActivity() {
 
                 meetingsIdArrayList!!.clear()
 
-                for (meetingId in p0.children){
+                for (meetingId in p0.children) {
                     meetingsIdArrayList!!.add(meetingId.key.toString())
                 }
 
@@ -128,12 +155,12 @@ class SingleGroupActivity : AppCompatActivity() {
     private fun loadMeetingsToAdapter() {
         groupMeetingsObjectArrayList!!.clear()
 
-        for (meetingId in meetingsIdArrayList!!){
+        for (meetingId in meetingsIdArrayList!!) {
             var currentGroupMeetingRootDatabase =
                 FirebaseDatabase.getInstance().getReference().child("Groups")
                     .child(groupId!!).child("Meetings").child(meetingId)
 
-            var getMeetingDataListener = object : ValueEventListener{
+            var getMeetingDataListener = object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 }
@@ -145,7 +172,8 @@ class SingleGroupActivity : AppCompatActivity() {
                     var time = p0.child("time").value
                     var datePosted = p0.child("datePosted").value
 
-                    var tempNotification = Notification(meetingId,
+                    var tempNotification = Notification(
+                        meetingId,
                         fromId.toString(), date.toString(), time.toString(),
                         place.toString(), datePosted.toString()
                     )
@@ -178,7 +206,7 @@ class SingleGroupActivity : AppCompatActivity() {
 
                 membersIdArrayList!!.clear()
 
-                for (memberId in p0.children){
+                for (memberId in p0.children) {
                     membersIdArrayList!!.add(memberId.key.toString())
                 }
 
@@ -196,7 +224,7 @@ class SingleGroupActivity : AppCompatActivity() {
 
         var currentUserId = FirebaseAuth.getInstance().currentUser!!.uid
 
-        for (memberId in membersIdArrayList!!){
+        for (memberId in membersIdArrayList!!) {
 
             var currentGroupMemberRootDatabase =
                 FirebaseDatabase.getInstance().getReference().child("Users")
@@ -207,9 +235,9 @@ class SingleGroupActivity : AppCompatActivity() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     // Get Post object and use the values to update the UI
 
-                    var userTemp:User = if (memberId == currentUserId){
+                    var userTemp: User = if (memberId == currentUserId) {
                         User("You", memberId)
-                    }else{
+                    } else {
                         User(dataSnapshot.child("Name").value as String, memberId)
 
                     }
