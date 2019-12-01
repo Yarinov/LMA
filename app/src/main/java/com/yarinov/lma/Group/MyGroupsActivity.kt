@@ -1,7 +1,17 @@
 package com.yarinov.lma.Group
 
-import androidx.appcompat.app.AppCompatActivity
+import android.media.Image
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
+
+import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -11,13 +21,23 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.yarinov.lma.R
-import kotlinx.android.synthetic.main.group_card_item.*
+
 
 class MyGroupsActivity : AppCompatActivity() {
 
     var myGroupsRecyclerView: RecyclerView? = null
     var groupsArrayList: ArrayList<Group>? = null
     var groupListAdapter: GroupsListAdapter? = null
+
+
+    var searchBar: CardView? = null
+    var searchBarOpenButton: ImageView ? = null
+    var mainToolBarLayout: LinearLayout? = null
+    var backSearchBarButton: Button? = null
+    private var searchBarFlag:Boolean?= null //True - Search Bar Open | False - Search Bar Close
+
+    var searchInput: EditText? = null
+
 
     var currentUser: FirebaseUser? = null
 
@@ -26,6 +46,13 @@ class MyGroupsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_my_groups)
 
         myGroupsRecyclerView = findViewById(R.id.myGroupsRecyclerView)
+
+        mainToolBarLayout = findViewById(R.id.mainMyGroupsToolbar)
+        searchBarOpenButton = findViewById(R.id.searchButton)
+        searchBar = findViewById(R.id.searchBar)
+        backSearchBarButton = findViewById(R.id.backSearchBarButton)
+        searchInput = findViewById(R.id.searchInputInMyGroups)
+        searchBarFlag = false
 
         currentUser = FirebaseAuth.getInstance().currentUser
 
@@ -39,8 +66,43 @@ class MyGroupsActivity : AppCompatActivity() {
         myGroupsRecyclerView!!.adapter = groupListAdapter
 
 
+
         getUserGroups()
+
+        searchInput!!.addTextChangedListener(object : TextWatcher {
+
+            override fun onTextChanged(cs: CharSequence, arg1: Int, arg2: Int, arg3: Int) {
+                // When user changed the Text
+                this@MyGroupsActivity.groupListAdapter!!.filter.filter(cs)
+            }
+
+            override fun beforeTextChanged(arg0: CharSequence, arg1: Int, arg2: Int, arg3: Int) {}
+
+            override fun afterTextChanged(arg0: Editable) {}
+        })
+
+
+        searchBarOpenButton!!.setOnClickListener {
+            openSearchBar()
+        }
+
+        backSearchBarButton!!.setOnClickListener {
+            closeSearchBar()
+        }
     }
+
+    private fun openSearchBar(){
+        searchBarFlag = true
+        mainToolBarLayout!!.visibility = View.GONE
+        searchBar!!.visibility = View.VISIBLE
+    }
+
+    private fun closeSearchBar(){
+        searchBarFlag = false
+        mainToolBarLayout!!.visibility = View.VISIBLE
+        searchBar!!.visibility = View.GONE
+    }
+
 
     private fun getUserGroups() {
 
@@ -95,5 +157,12 @@ class MyGroupsActivity : AppCompatActivity() {
         }
 
         currentUserGroupsDatabase.addValueEventListener(getUserGroupsListener)
+    }
+
+    override fun onBackPressed() {
+        if (searchBarFlag!!){
+            closeSearchBar()
+        }else
+            super.onBackPressed()
     }
 }

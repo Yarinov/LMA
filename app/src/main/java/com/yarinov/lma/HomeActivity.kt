@@ -26,7 +26,7 @@ import com.yarinov.lma.Group.CreateGroupActivity
 import com.yarinov.lma.Group.MyGroupsActivity
 import com.yarinov.lma.Info.AboutActivity
 import com.yarinov.lma.Meeting.SetupMeetingActivity
-import com.yarinov.lma.Notification.CustomNotification
+import com.yarinov.lma.Notification.HomeNotification
 import com.yarinov.lma.Notification.NotificationAdapter
 import com.yarinov.lma.User.FriendsActivity
 import de.hdodenhof.circleimageview.CircleImageView
@@ -47,7 +47,7 @@ class HomeActivity : AppCompatActivity() {
     var post: String? = null
 
     private var notificationListAdapter: NotificationAdapter? = null
-    private var notificationArrayList: ArrayList<CustomNotification> = ArrayList()
+    private var notificationArrayList: ArrayList<HomeNotification> = ArrayList()
 
     override fun onStart() {
         super.onStart()
@@ -300,11 +300,11 @@ class HomeActivity : AppCompatActivity() {
                         override fun onDataChange(p0: DataSnapshot) {
                             var toName = p0.value
 
-                            var notificationObject: CustomNotification
+                            var notificationObject: HomeNotification
 
                             //If - this is 1-to-1 meeting
                             if (groupAffecting.equals("none")) {
-                                notificationObject = CustomNotification(
+                                notificationObject = HomeNotification(
                                     notificationId.toString(),
                                     userId,
                                     myName.toString(),
@@ -321,7 +321,7 @@ class HomeActivity : AppCompatActivity() {
                             } else { // Else - this is group meeting
 
                                 if (notificationType == "sent"){ // If - this is a group meeting I set up
-                                    notificationObject = CustomNotification(
+                                    notificationObject = HomeNotification(
                                         notificationId.toString(),
                                         userId,
                                         myName.toString(),
@@ -336,7 +336,7 @@ class HomeActivity : AppCompatActivity() {
                                         datePosted.toString()
                                     )
                                 }else{ // Else - I didn't set this group meeting
-                                    notificationObject = CustomNotification(
+                                    notificationObject = HomeNotification(
                                         notificationId.toString(),
                                         userId,
                                         myName.toString(),
@@ -357,11 +357,10 @@ class HomeActivity : AppCompatActivity() {
                             notificationArrayList.add(notificationObject)
                             notificationListAdapter!!.sortByAsc()
 
-                            userNotificationList!!.visibility = View.VISIBLE
-                            noActivityText!!.visibility = View.GONE
-
                             notificationListAdapter!!.notifyDataSetChanged()
 
+                            userNotificationList!!.visibility = View.VISIBLE
+                            noActivityText!!.visibility = View.GONE
                         }
 
                         override fun onCancelled(p0: DatabaseError) {

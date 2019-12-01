@@ -166,6 +166,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:fontFamily="@font/pt_sans"
                         android:gravity="center"
                         android:onClick="setupMeetingSectionOpen"
                         android:text="Setup\nMeeting" />
@@ -189,6 +190,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:fontFamily="@font/pt_sans"
                         android:gravity="center"
                         android:onClick="createGroupSectionOpen"
                         android:text="Group\nMeeting" />
@@ -214,6 +216,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:fontFamily="@font/pt_sans"
                         android:text="Friends" />
                 </LinearLayout>
 
@@ -233,7 +236,8 @@
                         android:id="@+id/textView7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Invite Friend" />
+                        android:text="Invite Friend"
+                        android:fontFamily="@font/pt_sans" />
                 </LinearLayout>
 
             </LinearLayout>

@@ -1,10 +1,12 @@
 package com.yarinov.lma.Group
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
@@ -98,6 +100,13 @@ class GroupsListAdapter(
 
         holder.groupDescLabel!!.text = groupsList[position].groupDesc
 
+        holder.groupDetailsLabel!!.setOnClickListener {
+            var intent = Intent(context, SingleGroupActivity::class.java)
+            intent.putExtra("groupName", groupNameText)
+            intent.putExtra("groupId", groupId)
+            intent.putExtra("groupDesc", groupsList[position].groupDesc)
+            context.startActivity(intent)
+        }
 
     }
 
@@ -135,11 +144,13 @@ class GroupsListAdapter(
 
         var groupName: TextView? = null
         var groupDescLabel: TextView? = null
+        var groupDetailsLabel: TextView? = null
 
         init {
 
             groupName = mView.findViewById(R.id.groupNameLabel) as TextView
             groupDescLabel = mView.findViewById(R.id.groupDescLabel) as TextView
+            groupDetailsLabel = mView.findViewById(R.id.groupDetailsLabel) as TextView
 
 
         }

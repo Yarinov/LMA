@@ -77,7 +77,7 @@ class ContactListAdapter(private val context: Context, private var usersList: Li
         val userName = usersList[position].userName
 
         holder.tvname!!.isSelected = true
-        holder.tvname!!.setText(userName)
+        holder.tvname!!.text = userName
 
         //Get user pic (if exits)
         val storage = FirebaseStorage.getInstance()
@@ -104,6 +104,7 @@ class ContactListAdapter(private val context: Context, private var usersList: Li
             }
 
 
+
     }
 
     override fun getItemCount(): Int {
@@ -116,11 +117,14 @@ class ContactListAdapter(private val context: Context, private var usersList: Li
         var tvroundpic: CircleImageView? = null
         var tvname: TextView? = null
 
+        var divider:View? = null
+
         init {
 
             tvname = mView.findViewById(R.id.name) as TextView
             tvroundpic = mView.findViewById(R.id.profileImageList) as CircleImageView
 
+            divider = mView.findViewById(R.id.divider4)
         }
     }
 

@@ -17,7 +17,7 @@ import kotlin.Comparator
 
 class NotificationAdapter(
     private val context: Context,
-    private val notificationArrayList: List<CustomNotification>
+    private val notificationArrayList: List<HomeNotification>
 ) :
     RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
 
@@ -186,8 +186,8 @@ class NotificationAdapter(
     }
 
     fun sortByAsc(){
-        val comparator: Comparator<CustomNotification> =
-            Comparator { object1: CustomNotification, object2: CustomNotification ->
+        val comparator: Comparator<HomeNotification> =
+            Comparator { object1: HomeNotification, object2: HomeNotification ->
                 object2.datePosted.compareTo(object1.datePosted, true)
             }
         Collections.sort(notificationArrayList, comparator)

@@ -15,7 +15,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Group.MyGroupsActivity"
+        <activity android:name=".Group.SingleGroupActivity"></activity>
+        <activity
+            android:name=".Group.MyGroupsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MeetingSumTheme" />
         <activity

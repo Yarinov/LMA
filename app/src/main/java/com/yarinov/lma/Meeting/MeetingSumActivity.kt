@@ -163,7 +163,6 @@ class MeetingSumActivity : AppCompatActivity() {
 
                         if (groupMemberData != myId)
                             membersMeetingStatusMap[groupMemberData.toString()] = "pending"
-
                         else
                             membersMeetingStatusMap[groupMemberData.toString()] = "accept"
 
@@ -173,8 +172,20 @@ class MeetingSumActivity : AppCompatActivity() {
                     }
 
 
+                    var meetingDataMap = HashMap<String, String>()
+
+                    meetingDataMap.put("datePosted", currentDate.toString())
+                    meetingDataMap.put("from", myId)
+                    meetingDataMap.put("date", date!!)
+                    meetingDataMap.put("time", time!!)
+                    meetingDataMap.put("place", place!!)
+
                     FirebaseDatabase.getInstance().getReference().child("Groups").child(groupId!!)
-                        .child("Meetings").child(notificationId.toString()).setValue(membersMeetingStatusMap)
+                        .child("Meetings").child(notificationId.toString()).setValue(meetingDataMap)
+
+                    FirebaseDatabase.getInstance().getReference().child("Groups").child(groupId!!)
+                        .child("Meetings").child(notificationId.toString()).child("membersStatus")
+                        .setValue(membersMeetingStatusMap)
 
                     sendMeetingToGroupMembers(groupMembers, notificationId, receivedMeetingData)
 
@@ -187,7 +198,6 @@ class MeetingSumActivity : AppCompatActivity() {
                 }
             }
             groupsDb.addValueEventListener(postListener)
-
 
 
             //Write to current user notification
