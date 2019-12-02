@@ -23,6 +23,7 @@ import com.yarinov.lma.CustomObject.ProgressGenerator.ProgressGenerator
 import com.yarinov.lma.Glide.GlideApp
 import com.yarinov.lma.R
 import de.hdodenhof.circleimageview.CircleImageView
+import timber.log.Timber
 
 
 class AddFriendListAdapter(private val context: Context, private var usersList: List<User>) :
@@ -131,7 +132,7 @@ class AddFriendListAdapter(private val context: Context, private var usersList: 
                 val errorCode = (exception as StorageException).errorCode
                 if (errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {
                     //Not Found
-                    Log.i("FriendsListAdapter", "Not found " + userName)
+                    Timber.i("FriendsListAdapter", "Not found " + userName)
                 }
             }
 

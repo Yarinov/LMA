@@ -202,7 +202,7 @@ class NotificationAdapter(
     fun sortByAsc(){
         val comparator: Comparator<HomeNotification> =
             Comparator { object1: HomeNotification, object2: HomeNotification ->
-                object2.datePosted.compareTo(object1.datePosted, true)
+                object1.datePosted.compareTo(object2.datePosted, true)
             }
         Collections.sort(notificationArrayList, comparator)
         notifyDataSetChanged()

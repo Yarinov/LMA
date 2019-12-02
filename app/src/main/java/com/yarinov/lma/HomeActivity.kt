@@ -3,6 +3,7 @@ package com.yarinov.lma
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -23,6 +24,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.yarinov.lma.Authentication.LoginActivity
 import com.yarinov.lma.Glide.GlideApp
 import com.yarinov.lma.Group.CreateGroupActivity
@@ -48,6 +50,12 @@ class HomeActivity : AppCompatActivity() {
 
     var user: FirebaseUser? = null
     var post: String? = null
+
+    var mStorage: StorageReference? = null
+
+
+    val PICK_IMAGE = 1
+    var imageUri: Uri? = null
 
     private var notificationListAdapter: NotificationAdapter? = null
     private var notificationArrayList: ArrayList<HomeNotification> = ArrayList()
@@ -77,6 +85,8 @@ class HomeActivity : AppCompatActivity() {
 
         var popupMenu = findViewById<FabSpeedDial>(R.id.menuPopup)
 
+        mStorage = FirebaseStorage.getInstance().reference.child("Images")
+
         //Disable home layout till data load
         homeLayout?.visibility = View.GONE
 
@@ -86,7 +96,7 @@ class HomeActivity : AppCompatActivity() {
             var userId = user!!.uid
 
             val currentUserRootDatabase =
-                FirebaseDatabase.getInstance().getReference().child("Users")
+                FirebaseDatabase.getInstance().reference.child("Users")
                     .child(userId)
 
             userNameTitle = findViewById(R.id.userNameTitle)
@@ -96,19 +106,20 @@ class HomeActivity : AppCompatActivity() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     // Get Post object and use the values to update the UI
                     var myName = dataSnapshot.child("Name").value
-                    userNameTitle!!.setText("Hello $myName!")
+                    userNameTitle!!.text = "Hello $myName!"
                     userNameTitle!!.isSelected = true
 
                     //If the user have a profile pic
-                    if (dataSnapshot.child("imgUri").getValue()!!.equals("true")) {
+                    if (dataSnapshot.child("imgUri").value!!.equals("true")) {
 
                         val storage = FirebaseStorage.getInstance()
 
                         val gsReference =
-                            storage.getReferenceFromUrl("gs://lma-master.appspot.com/Images/" + userId + ".jpg")
+                            storage.getReferenceFromUrl("gs://lma-master.appspot.com/Images/$userId.jpg")
 
 
-                        GlideApp.with(applicationContext).asBitmap().load(gsReference).diskCacheStrategy(DiskCacheStrategy.NONE)
+                        GlideApp.with(applicationContext).asBitmap().load(gsReference)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .skipMemoryCache(true)
                             .dontAnimate().into(object : SimpleTarget<Bitmap?>() {
                                 override fun onResourceReady(
@@ -185,6 +196,53 @@ class HomeActivity : AppCompatActivity() {
         userNotificationList!!.adapter = notificationListAdapter
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PICK_IMAGE) {
+            imageUri = data!!.data
+        }
+    }
+
+    fun changeProfilePic(view: View) {
+        var picIntent = Intent()
+        picIntent.type = "image/*"
+        picIntent.action = Intent.ACTION_OPEN_DOCUMENT
+        startActivityForResult(Intent.createChooser(picIntent, "Choose Photo"), PICK_IMAGE)
+
+
+        if (imageUri !=null){
+            var userProfileImageStorageReference = mStorage!!.child(user!!.uid + ".jpg")
+
+            userProfileImageStorageReference.putFile(imageUri!!).addOnCompleteListener { task ->
+
+                if (task.isSuccessful) {
+                    var downloadUri =
+                        task.result!!.storage.downloadUrl.toString()
+
+                    GlideApp.with(applicationContext).asBitmap().load(downloadUri)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .dontAnimate().into(object : SimpleTarget<Bitmap?>() {
+                            override fun onResourceReady(
+                                resource: Bitmap,
+                                transition: Transition<in Bitmap?>?
+                            ) {
+                                profilePic!!.setImageBitmap(resource)
+                            }
+
+                        })
+                }
+
+            }
+
+            FirebaseDatabase.getInstance().reference.child("Users")
+                .child(user!!.uid).child("imgUri").setValue(true)
+        }
+
+
+    }
+
 
     fun createGroupSectionOpen(view: View) {
         val intent = Intent(this, CreateGroupActivity::class.java)
@@ -236,9 +294,9 @@ class HomeActivity : AppCompatActivity() {
     private fun logout() {
 
         //Get a user uid and user database root to remove the token id from this user before logout
-        var user_id = user!!.getUid()
+        var user_id = user!!.uid
         val currentUserTokenIdDb =
-            FirebaseDatabase.getInstance().getReference().child("Users")
+            FirebaseDatabase.getInstance().reference.child("Users")
                 .child(user_id).child("tokenId")
 
         currentUserTokenIdDb.setValue("").addOnSuccessListener {
@@ -253,7 +311,7 @@ class HomeActivity : AppCompatActivity() {
 
 
         val currentUserNotificationDatabase =
-            FirebaseDatabase.getInstance().getReference().child("Users")
+            FirebaseDatabase.getInstance().reference.child("Users")
                 .child(userId).child("Notifications")
 
         //Set home activity according to the user details
@@ -301,7 +359,7 @@ class HomeActivity : AppCompatActivity() {
 
                     //Get Friend Name
                     val currentUserFriendDatabase =
-                        FirebaseDatabase.getInstance().getReference().child("Users")
+                        FirebaseDatabase.getInstance().reference.child("Users")
                             .child(friendId).child("Name")
 
                     val getUserNameListener = object : ValueEventListener {
@@ -329,7 +387,7 @@ class HomeActivity : AppCompatActivity() {
                                 )
                             } else { // Else - this is group meeting
 
-                                if (notificationType == "sent"){ // If - this is a group meeting I set up
+                                if (notificationType == "sent") { // If - this is a group meeting I set up
                                     notificationObject = HomeNotification(
                                         notificationId.toString(),
                                         userId,
@@ -344,7 +402,7 @@ class HomeActivity : AppCompatActivity() {
                                         "Group",
                                         datePosted.toString()
                                     )
-                                }else{ // Else - I didn't set this group meeting
+                                } else { // Else - I didn't set this group meeting
                                     notificationObject = HomeNotification(
                                         notificationId.toString(),
                                         friendId,

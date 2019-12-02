@@ -123,7 +123,7 @@ class PhoneVerifyActivity : AppCompatActivity() {
         firstVerifyLayout!!.visibility = View.GONE
         secondVerifyLayout!!.visibility = View.VISIBLE
 
-        verifyCodeText?.setText("Please type the verification code sent to " + phoneNumber)
+        verifyCodeText?.setText("Please type the verification code sent to $phoneNumber")
 
     }
 

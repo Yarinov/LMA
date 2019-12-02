@@ -16,6 +16,7 @@ import com.google.firebase.storage.StorageException
 import com.yarinov.lma.Glide.GlideApp
 import com.yarinov.lma.R
 import de.hdodenhof.circleimageview.CircleImageView
+import timber.log.Timber
 
 class FriendsListAdapter(private val context: Context, private val usersList: List<User>) :
     RecyclerView.Adapter<FriendsListAdapter.ViewHolder>() {
@@ -62,7 +63,7 @@ class FriendsListAdapter(private val context: Context, private val usersList: Li
                 val errorCode = (exception as StorageException).errorCode
                 if (errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {
                     //Not Found
-                    Log.i("FriendsListAdapter", "Not found " + userName)
+                    Timber.i("FriendsListAdapter", "Not found $userName")
                 }
             }
 

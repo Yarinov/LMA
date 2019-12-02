@@ -34,9 +34,6 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".Maps.MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
-        <activity
             android:name=".Meeting.SingleMeetingActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MeetingSumTheme" />

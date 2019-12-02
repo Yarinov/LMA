@@ -20,6 +20,7 @@ import com.yarinov.lma.Glide.GlideApp
 import com.yarinov.lma.R
 import com.yarinov.lma.User.User
 import de.hdodenhof.circleimageview.CircleImageView
+import timber.log.Timber
 
 class ContactListAdapter(private val context: Context, private var usersList: List<User>) :
     RecyclerView.Adapter<ContactListAdapter.ViewHolder>(), Filterable{
@@ -107,7 +108,7 @@ class ContactListAdapter(private val context: Context, private var usersList: Li
                 val errorCode = (exception as StorageException).errorCode
                 if (errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {
                     //Not Found
-                    Log.i("FriendsListAdapter", "Not found " + userName)
+                    Timber.i("FriendsListAdapter", "Not found " + userName)
                 }
             }
 

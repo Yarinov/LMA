@@ -96,7 +96,7 @@ class MembersMeetingStatusAdapter(
 //                val errorCode = (exception as StorageException).errorCode
 //                if (errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {
 //                    //Not Found
-//                    Log.i("FriendsListAdapter", "Not found $memberId")
+//                    Timber.i("FriendsListAdapter", "Not found $memberId")
 //                }
 //            }
 //
