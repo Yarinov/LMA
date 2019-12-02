@@ -52,7 +52,6 @@ class SingleMeetingActivity : AppCompatActivity() {
         acceptButton = findViewById(R.id.acceptButton)
         denyButton = findViewById(R.id.denyButton)
 
-
         membersIdArrayList = ArrayList()
         groupMembersObjectArrayList = ArrayList()
 

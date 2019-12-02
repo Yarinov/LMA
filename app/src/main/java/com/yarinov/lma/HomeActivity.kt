@@ -2,6 +2,7 @@ package com.yarinov.lma
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -12,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.internal.NavigationMenu
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -92,8 +95,8 @@ class HomeActivity : AppCompatActivity() {
             val postListener = object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     // Get Post object and use the values to update the UI
-                    var myName = dataSnapshot.child("Name").getValue()
-                    userNameTitle!!.setText("Hello " + myName + "!")
+                    var myName = dataSnapshot.child("Name").value
+                    userNameTitle!!.setText("Hello $myName!")
                     userNameTitle!!.isSelected = true
 
                     //If the user have a profile pic
@@ -105,11 +108,17 @@ class HomeActivity : AppCompatActivity() {
                             storage.getReferenceFromUrl("gs://lma-master.appspot.com/Images/" + userId + ".jpg")
 
 
-                        GlideApp.with(applicationContext)
-                            .load(gsReference)
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        GlideApp.with(applicationContext).asBitmap().load(gsReference).diskCacheStrategy(DiskCacheStrategy.NONE)
                             .skipMemoryCache(true)
-                            .into(profilePic!!)
+                            .dontAnimate().into(object : SimpleTarget<Bitmap?>() {
+                                override fun onResourceReady(
+                                    resource: Bitmap,
+                                    transition: Transition<in Bitmap?>?
+                                ) {
+                                    profilePic!!.setImageBitmap(resource)
+                                }
+
+                            })
 
 
                     }

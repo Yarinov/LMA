@@ -70,7 +70,6 @@ class MembersMeetingStatusAdapter(
         meetingRootDatabase.addValueEventListener(getGroupMembersListener)
 
 
-        println("" + membersArrayList!!.size + "AAAAAAAAAAAAAAAAAAAA")
         return ViewHolder(view)
 
     }

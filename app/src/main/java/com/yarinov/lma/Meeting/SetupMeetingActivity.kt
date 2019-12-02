@@ -98,6 +98,8 @@ class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelecte
 
         contactList = findViewById(R.id.contactList)
 
+        contactList!!.itemAnimator = null
+
 
         userFriendsObjectArrayList = ArrayList()
         userGroupsObjectArrayList = ArrayList()
@@ -160,6 +162,11 @@ class SetupMeetingActivity : AppCompatActivity(), RangeTimePickerDialog.ISelecte
         thePlace = "Somewhere over the rainbow"
 
     }
+
+//    fun openMap(view: View){
+//        var intent = Intent(this, MapsActivity::class.java)
+//        startActivity(intent)
+//    }
 
 
     //RecyclerView interface for item click

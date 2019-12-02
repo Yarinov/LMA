@@ -1,6 +1,7 @@
 package com.yarinov.lma.User
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
 import com.yarinov.lma.Glide.GlideApp
@@ -43,11 +46,17 @@ class FriendsListAdapter(private val context: Context, private val usersList: Li
             .addOnSuccessListener {
 
 
-                GlideApp.with(context)
-                    .load(gsReference)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                GlideApp.with(context).asBitmap().load(gsReference).diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
-                    .into(holder.tvroundpic!!)
+                    .dontAnimate().into(object : SimpleTarget<Bitmap?>() {
+                        override fun onResourceReady(
+                            resource: Bitmap,
+                            transition: Transition<in Bitmap?>?
+                        ) {
+                            holder.tvroundpic!!.setImageBitmap(resource)
+                        }
+
+                    })
             }
             .addOnFailureListener { exception ->
                 val errorCode = (exception as StorageException).errorCode

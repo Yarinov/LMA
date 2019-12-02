@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <Toolbar
             android:id="@+id/screenTitle"
@@ -163,6 +163,7 @@
                 android:text="Choose Location From Map"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
+                android:visibility="gone"
                 custom:pb_colorComplete="@color/green_complete"
                 custom:pb_colorError="@color/red_error"
                 custom:pb_colorNormal="@color/colorPrimary"
