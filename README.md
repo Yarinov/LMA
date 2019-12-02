@@ -14,10 +14,12 @@ In LMA, you can create a 1-to-1 meetings and group meetings!
   <img src="https://i.ibb.co/2qHt1pj/screen-2.png" width="350" alt="mainscreen 2">
 </p>
 
+<br/>
+
 <p align="center">
-  <img src="https://i.ibb.co/pPBDT7H/screen-3.png" width="150" title="mainscreen 3">
-  <img src="https://i.ibb.co/2qHt1pj/screen-4.png" width="150" alt="mainscreen 4">
-  <img src="https://i.ibb.co/2qHt1pj/screen-5.png" width="150" alt="mainscreen 5">
+  <img src="https://i.ibb.co/gFPdBc4/screen-3.png" width="150" title="mainscreen 3">
+  <img src="https://i.ibb.co/nw58Y5V/screen-4.png" width="150" alt="mainscreen 4">
+  <img src="https://i.ibb.co/LZfx52W/screen-5.png" width="150" alt="mainscreen 5">
 </p>
 
 
