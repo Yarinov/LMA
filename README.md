@@ -9,11 +9,11 @@ In LMA, you can create a 1-to-1 meetings and group meetings!
 
 ## Screenshots
 
-https://ibb.co/9vkX0Dx
-https://ibb.co/Q9tN3x6
-https://ibb.co/NnmrHGT
-https://ibb.co/L02hc2q
-https://ibb.co/tJ5qXWt
+<p align="center">
+  <img src="https://i.ibb.co/pPBDT7H/screen-1.png" width="350" title="mainscreen 1">
+  <img src="https://i.ibb.co/2qHt1pj/screen-2.png" width="350" alt="mainscreen 2">
+</p>
+
 
 ## Author
 
